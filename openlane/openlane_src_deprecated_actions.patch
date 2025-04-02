@@ -1,0 +1,83 @@
+diff --git a/.github/workflows/openlane_ci.yml b/.github/workflows/openlane_ci.yml
+index 7b4fd3c..9de262b 100644
+--- a/.github/workflows/openlane_ci.yml
++++ b/.github/workflows/openlane_ci.yml
+@@ -67,7 +67,7 @@ jobs:
+           tar -cf /tmp/${{ matrix.pdk }}.tar -C $PDK_ROOT/${{ matrix.pdk }} .
+ 
+       - name: Upload PDK Tarball
+-        uses: actions/upload-artifact@v3
++        uses: actions/upload-artifact@v4
+         with:
+           name: pdk-tarball-${{ matrix.pdk }}
+           path: /tmp/${{ matrix.pdk }}.tar
+@@ -136,7 +136,7 @@ jobs:
+         uses: ./.github/actions/set_env_variables
+ 
+       - name: Download Docker Image
+-        uses: actions/download-artifact@v3
++        uses: actions/download-artifact@v4
+         with:
+           name: docker-image-amd64
+           path: /tmp
+@@ -145,7 +145,7 @@ jobs:
+         run: docker load --input /tmp/image-amd64.tar
+ 
+       - name: Download PDK Tarball
+-        uses: actions/download-artifact@v3
++        uses: actions/download-artifact@v4
+         with:
+           name: pdk-tarball-sky130A
+           path: /tmp
+@@ -164,7 +164,7 @@ jobs:
+ 
+       - name: Upload Logs
+         if: ${{ always() }}
+-        uses: actions/upload-artifact@v3
++        uses: actions/upload-artifact@v4
+         with:
+           name: test_${{ matrix.test }}_logs
+           path: ./test_logs
+@@ -186,7 +186,7 @@ jobs:
+         uses: ./.github/actions/set_env_variables
+ 
+       - name: Download Docker Image (amd64)
+-        uses: actions/download-artifact@v3
++        uses: actions/download-artifact@v4
+         with:
+           name: docker-image-amd64
+           path: /tmp
+@@ -195,7 +195,7 @@ jobs:
+         run: docker load --input /tmp/image-amd64.tar
+ 
+       - name: Download PDK Tarball
+-        uses: actions/download-artifact@v3
++        uses: actions/download-artifact@v4
+         with:
+           name: pdk-tarball-${{ matrix.design.pdk }}
+           path: /tmp
+@@ -230,7 +230,7 @@ jobs:
+ 
+       - name: Upload Run Tarball
+         if: ${{ always() }}
+-        uses: actions/upload-artifact@v3
++        uses: actions/upload-artifact@v4
+         with:
+           name: ${{ env.ESCAPED_DESIGN_NAME }}-${{ matrix.design.pdk }}
+           path: ./reproducible.tar.gz
+@@ -258,13 +258,13 @@ jobs:
+         uses: ./.github/actions/set_env_variables
+ 
+       - name: Download Docker Image (amd64)
+-        uses: actions/download-artifact@v3
++        uses: actions/download-artifact@v4
+         with:
+           name: docker-image-amd64
+           path: /tmp
+ 
+       - name: Download Docker Image (arm64v8)
+-        uses: actions/download-artifact@v3
++        uses: actions/download-artifact@v4
+         with:
+           name: docker-image-arm64v8
+           path: /tmp
