@@ -177,6 +177,9 @@ jobs:
 
       - name: Harden using Openlane
         run: |
+          # Setup venv
+          make pdk-with-volare
+          
           python3 $GITHUB_WORKSPACE/.github/scripts/get_designs.py --design $GITHUB_WORKSPACE
           for word in $(cat harden_sequence.txt); do
             echo "CURRENT_DESIGN=${word}" >> $GITHUB_ENV
