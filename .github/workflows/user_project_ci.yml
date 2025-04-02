@@ -175,6 +175,19 @@ jobs:
           sudo chown -R $USER:$USER ${{ env.OPENLANE_ROOT }}
           tar -xf /tmp/openlane.tar -C $OPENLANE_ROOT .
 
+      # For workaround running pdk-with-volare.
+      - name: Download caravel Tarball
+        uses: actions/download-artifact@v4
+        with:
+          name: caravel-tarball
+          path: /tmp
+
+      - name: Unpack caravel Tarball
+        run: |
+          sudo mkdir -p ${{ env.CARAVEL_ROOT }}
+          sudo chown -R $USER:$USER ${{ env.CARAVEL_ROOT }}
+          tar -xf /tmp/caravel.tar -C $CARAVEL_ROOT .
+
       - name: Harden using Openlane
         run: |
           # Setup venv
