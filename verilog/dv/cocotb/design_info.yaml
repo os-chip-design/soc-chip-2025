@@ -1,8 +1,8 @@
-CARAVEL_ROOT: /usr/caravel_user_project/caravel
-MCW_ROOT: /usr/caravel_user_project/mgmt_core_wrapper
+CARAVEL_ROOT: /root/stuff/dtu-soc-2025/soc-chip-2025/caravel
+MCW_ROOT: /root/stuff/dtu-soc-2025/soc-chip-2025/mgmt_core_wrapper
 PDK: sky130A
-PDK_ROOT: /usr/pdk
-USER_PROJECT_ROOT: /usr/caravel_user_project
+PDK_ROOT: /root/stuff/dtu-soc-2025/soc-chip-2025/dependencies/pdks
+USER_PROJECT_ROOT: /root/stuff/dtu-soc-2025/soc-chip-2025
 caravan: false
 clk: 25
 emailto:
