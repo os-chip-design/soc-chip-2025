@@ -1,9 +1,9 @@
 {
-    "DESIGN_NAME": "user_proj_example",
+    "DESIGN_NAME": "CaravelTopLevel",
     "DESIGN_IS_CORE": 0,
     "VERILOG_FILES": [
         "dir::../../verilog/rtl/defines.v",
-        "dir::../../verilog/rtl/user_proj_example.v"
+        "dir::../../verilog/rtl/CaravelTopLevel.v"
     ],
     "CLOCK_PERIOD": 25,
     "CLOCK_PORT": "wb_clk_i",
@@ -30,7 +30,7 @@
         "vssd1"
     ],
     "IO_SYNC": 0,
-    "BASE_SDC_FILE": "dir::base_user_proj_example.sdc",
+    "BASE_SDC_FILE": "dir::base_CaravelTopLevel.sdc",
     "RUN_CVC": 1,
     "pdk::sky130*": {
         "FP_CORE_UTIL": 45,
