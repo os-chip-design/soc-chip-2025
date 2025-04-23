@@ -2,6 +2,8 @@ name: CI
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * *'
 
 jobs:
   download_caravel:
