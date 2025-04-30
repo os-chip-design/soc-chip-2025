@@ -18,12 +18,10 @@ module CaravelTopLevel(
   input          io_user_clock2,
   output [2:0]   io_user_irq
 );
-  wire  rst = ~io_la_oenb[65] ? io_la_data_in[65] : io_wb_rst_i; // @[CaravelTopLevel.scala 116:25 117:9 119:9]
-  wire  _io_la_data_out_T = ~rst; // @[CaravelTopLevel.scala 123:23]
-  assign io_wbs_ack_o = 1'h0;
-  assign io_wbs_dat_o = 32'h0;
-  assign io_la_data_out = {{127'd0}, _io_la_data_out_T}; // @[CaravelTopLevel.scala 123:20]
-  assign io_io_out = 38'h0;
-  assign io_io_oeb = 38'h0;
+  assign io_wbs_ack_o = 1'h0; // @[CaravelTopLevel.scala 133:16]
+  assign io_wbs_dat_o = 32'h0; // @[CaravelTopLevel.scala 134:16]
+  assign io_la_data_out = 128'h0;
+  assign io_io_out = 38'h0; // @[CaravelTopLevel.scala 136:13]
+  assign io_io_oeb = 38'h0; // @[CaravelTopLevel.scala 137:13]
   assign io_user_irq = 3'h0;
 endmodule
