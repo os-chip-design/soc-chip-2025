@@ -47,12 +47,6 @@ module PipeConInterconnect(
   output        io_device_2_wr,
   input  [31:0] io_device_2_rdData,
   output [31:0] io_device_2_wrData,
-  output [31:0] io_device_3_address,
-  output        io_device_3_rd,
-  output        io_device_3_wr,
-  input  [31:0] io_device_3_rdData,
-  output [31:0] io_device_3_wrData,
-  output [3:0]  io_device_3_wrMask,
   input  [31:0] io_dmem_rdAddress,
   output [31:0] io_dmem_rdData,
   input         io_dmem_rdEnable,
@@ -87,14 +81,6 @@ module PipeConInterconnect(
   assign io_device_2_rd = io_dmem_wrAddress >= 32'h20 & io_dmem_wrAddress <= 32'h2f & selected_rd; // @[PipeConInterconnect.scala 35:74 36:16 12:21]
   assign io_device_2_wr = io_dmem_wrAddress >= 32'h20 & io_dmem_wrAddress <= 32'h2f & selected_wr; // @[PipeConInterconnect.scala 35:74 36:16 13:21]
   assign io_device_2_wrData = io_dmem_wrAddress >= 32'h20 & io_dmem_wrAddress <= 32'h2f ? selected_wrData : 32'h0; // @[PipeConInterconnect.scala 35:74 36:16 15:25]
-  assign io_device_3_address = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff ? selected_address
-     : 32'h0; // @[PipeConInterconnect.scala 35:74 36:16 14:26]
-  assign io_device_3_rd = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff & selected_rd; // @[PipeConInterconnect.scala 35:74 36:16 12:21]
-  assign io_device_3_wr = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff & selected_wr; // @[PipeConInterconnect.scala 35:74 36:16 13:21]
-  assign io_device_3_wrData = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff ? selected_wrData : 32'h0
-    ; // @[PipeConInterconnect.scala 35:74 36:16 15:25]
-  assign io_device_3_wrMask = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff ? selected_wrMask : 4'h0
-    ; // @[PipeConInterconnect.scala 35:74 36:16 16:25]
   assign io_dmem_rdData = rdDataReg; // @[PipeConInterconnect.scala 55:18]
   always @(posedge clock) begin
     if (reset) begin // @[PipeConInterconnect.scala 19:26]
@@ -102,7 +88,7 @@ module PipeConInterconnect(
     end else if (!(selected_wr)) begin // @[PipeConInterconnect.scala 41:41]
       if (io_dmem_rdEnable) begin // @[PipeConInterconnect.scala 47:32]
         if (io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff) begin // @[PipeConInterconnect.scala 35:74]
-          rdDataReg <= io_device_3_rdData; // @[PipeConInterconnect.scala 36:16]
+          rdDataReg <= 32'h0; // @[PipeConInterconnect.scala 36:16]
         end else begin
           rdDataReg <= _GEN_17;
         end
@@ -1374,443 +1360,443 @@ module GPIOPeripheral(
   reg [31:0] _RAND_16;
   reg [31:0] _RAND_17;
 `endif // RANDOMIZE_REG_INIT
-  wire  gpio_direction_clock; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_reset; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_read_data; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_write_data; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_rd; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_wr; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_conf_output_0; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_conf_output_1; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_conf_output_2; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_conf_output_3; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_conf_output_4; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_conf_output_5; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_conf_output_6; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_direction_io_conf_output_7; // @[GPIOPeripheral.scala 43:37]
-  wire  gpio_pullup_clock; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_reset; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_read_data; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_write_data; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_rd; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_wr; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_conf_output_0; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_conf_output_1; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_conf_output_2; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_conf_output_3; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_conf_output_4; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_conf_output_5; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_conf_output_6; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pullup_io_conf_output_7; // @[GPIOPeripheral.scala 44:37]
-  wire  gpio_pulldown_clock; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_reset; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_read_data; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_write_data; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_rd; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_wr; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_conf_output_0; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_conf_output_1; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_conf_output_2; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_conf_output_3; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_conf_output_4; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_conf_output_5; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_conf_output_6; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_pulldown_io_conf_output_7; // @[GPIOPeripheral.scala 45:37]
-  wire  gpio_opendrain_clock; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_reset; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_read_data; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_write_data; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_rd; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_wr; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_conf_output_0; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_conf_output_1; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_conf_output_2; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_conf_output_3; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_conf_output_4; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_conf_output_5; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_conf_output_6; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_opendrain_io_conf_output_7; // @[GPIOPeripheral.scala 46:37]
-  wire  gpio_drivestrength_clock; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_reset; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_read_data; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_write_data; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_rd; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_wr; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_conf_output_0; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_conf_output_1; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_conf_output_2; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_conf_output_3; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_conf_output_4; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_conf_output_5; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_conf_output_6; // @[GPIOPeripheral.scala 47:37]
-  wire  gpio_drivestrength_io_conf_output_7; // @[GPIOPeripheral.scala 47:37]
-  wire  pwm_polarity_clock; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_reset; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_read_data; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_write_data; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_rd; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_wr; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_conf_output_0; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_conf_output_1; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_conf_output_2; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_conf_output_3; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_conf_output_4; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_conf_output_5; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_conf_output_6; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_polarity_io_conf_output_7; // @[GPIOPeripheral.scala 48:37]
-  wire  pwm_enable_clock; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_reset; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_read_data; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_write_data; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_rd; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_wr; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_conf_output_0; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_conf_output_1; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_conf_output_2; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_conf_output_3; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_conf_output_4; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_conf_output_5; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_conf_output_6; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_enable_io_conf_output_7; // @[GPIOPeripheral.scala 50:37]
-  wire  pwm_duty_cycle_clock; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_reset; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_read_data; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_write_data; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_rd; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_wr; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_conf_output_0; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_conf_output_1; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_conf_output_2; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_conf_output_3; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_conf_output_4; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_conf_output_5; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_conf_output_6; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_duty_cycle_io_conf_output_7; // @[GPIOPeripheral.scala 51:37]
-  wire  pwm_prescaler_clock; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_reset; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_read_data; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_write_data; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_rd; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_wr; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_conf_output_0; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_conf_output_1; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_conf_output_2; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_conf_output_3; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_conf_output_4; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_conf_output_5; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_conf_output_6; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_prescaler_io_conf_output_7; // @[GPIOPeripheral.scala 52:37]
-  wire  pwm_div_clock; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_reset; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_read_data; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_write_data; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_rd; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_wr; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_conf_output_0; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_conf_output_1; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_conf_output_2; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_conf_output_3; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_conf_output_4; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_conf_output_5; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_conf_output_6; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_div_io_conf_output_7; // @[GPIOPeripheral.scala 53:37]
-  wire  pwm_period_clock; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_reset; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_read_data; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_write_data; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_rd; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_wr; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_conf_output_0; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_conf_output_1; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_conf_output_2; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_conf_output_3; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_conf_output_4; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_conf_output_5; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_conf_output_6; // @[GPIOPeripheral.scala 54:37]
-  wire  pwm_period_io_conf_output_7; // @[GPIOPeripheral.scala 54:37]
-  wire  gpio_module_0_clock; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_0_reset; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_0_io_gpio_direction; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_0_io_gpio_output; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_0_io_gpio_input; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_0_io_pwm_div; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_0_io_duty_cycle; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_0_io_pwm_period; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_0_io_pwm_polarity; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_0_io_pwm_en; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_1_clock; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_1_reset; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_1_io_gpio_direction; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_1_io_gpio_output; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_1_io_gpio_input; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_1_io_pwm_div; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_1_io_duty_cycle; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_1_io_pwm_period; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_1_io_pwm_polarity; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_1_io_pwm_en; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_2_clock; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_2_reset; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_2_io_gpio_direction; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_2_io_gpio_output; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_2_io_gpio_input; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_2_io_pwm_div; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_2_io_duty_cycle; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_2_io_pwm_period; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_2_io_pwm_polarity; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_2_io_pwm_en; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_3_clock; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_3_reset; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_3_io_gpio_direction; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_3_io_gpio_output; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_3_io_gpio_input; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_3_io_pwm_div; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_3_io_duty_cycle; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_3_io_pwm_period; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_3_io_pwm_polarity; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_3_io_pwm_en; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_4_clock; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_4_reset; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_4_io_gpio_direction; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_4_io_gpio_output; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_4_io_gpio_input; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_4_io_pwm_div; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_4_io_duty_cycle; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_4_io_pwm_period; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_4_io_pwm_polarity; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_4_io_pwm_en; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_5_clock; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_5_reset; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_5_io_gpio_direction; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_5_io_gpio_output; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_5_io_gpio_input; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_5_io_pwm_div; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_5_io_duty_cycle; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_5_io_pwm_period; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_5_io_pwm_polarity; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_5_io_pwm_en; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_6_clock; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_6_reset; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_6_io_gpio_direction; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_6_io_gpio_output; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_6_io_gpio_input; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_6_io_pwm_div; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_6_io_duty_cycle; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_6_io_pwm_period; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_6_io_pwm_polarity; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_6_io_pwm_en; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_7_clock; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_7_reset; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_7_io_gpio_direction; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_7_io_gpio_output; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_7_io_gpio_input; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_7_io_pwm_div; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_7_io_duty_cycle; // @[GPIOPeripheral.scala 59:23]
-  wire [7:0] gpio_module_7_io_pwm_period; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_7_io_pwm_polarity; // @[GPIOPeripheral.scala 59:23]
-  wire  gpio_module_7_io_pwm_en; // @[GPIOPeripheral.scala 59:23]
-  reg [7:0] gpio_output; // @[GPIOPeripheral.scala 40:38]
-  reg [7:0] gpio_input_0; // @[GPIOPeripheral.scala 41:34]
-  reg [7:0] gpio_input_1; // @[GPIOPeripheral.scala 41:34]
-  reg [7:0] gpio_input_2; // @[GPIOPeripheral.scala 41:34]
-  reg [7:0] gpio_input_3; // @[GPIOPeripheral.scala 41:34]
-  reg [7:0] gpio_input_4; // @[GPIOPeripheral.scala 41:34]
-  reg [7:0] gpio_input_5; // @[GPIOPeripheral.scala 41:34]
-  reg [7:0] gpio_input_6; // @[GPIOPeripheral.scala 41:34]
-  reg [7:0] gpio_input_7; // @[GPIOPeripheral.scala 41:34]
-  reg  para_read_en; // @[GPIOPeripheral.scala 146:34]
-  reg [31:0] readReg; // @[GPIOPeripheral.scala 147:34]
-  reg [2:0] read_state_reg; // @[GPIOPeripheral.scala 159:34]
-  wire  _T_13 = 32'h0 == io_mem_ifc_address; // @[GPIOPeripheral.scala 191:40]
-  wire  _GEN_6 = 32'h118 == io_mem_ifc_address & pwm_prescaler_io_read_data; // @[GPIOPeripheral.scala 152:25 191:40 221:49]
-  wire  _GEN_8 = 32'h110 == io_mem_ifc_address ? pwm_duty_cycle_io_read_data : _GEN_6; // @[GPIOPeripheral.scala 191:40 217:49]
-  wire  _GEN_11 = 32'h100 == io_mem_ifc_address ? pwm_enable_io_read_data : _GEN_8; // @[GPIOPeripheral.scala 191:40 213:49]
-  wire  _GEN_15 = 32'h30 == io_mem_ifc_address ? gpio_drivestrength_io_read_data : _GEN_11; // @[GPIOPeripheral.scala 191:40 209:49]
-  wire  _GEN_20 = 32'h28 == io_mem_ifc_address ? gpio_opendrain_io_read_data : _GEN_15; // @[GPIOPeripheral.scala 191:40 205:49]
-  wire  _GEN_26 = 32'h20 == io_mem_ifc_address ? gpio_pulldown_io_read_data : _GEN_20; // @[GPIOPeripheral.scala 191:40 201:49]
-  wire  _GEN_33 = 32'h18 == io_mem_ifc_address ? gpio_pullup_io_read_data : _GEN_26; // @[GPIOPeripheral.scala 191:40 197:49]
-  wire  _GEN_41 = 32'h0 == io_mem_ifc_address ? gpio_direction_io_read_data : _GEN_33; // @[GPIOPeripheral.scala 191:40 193:49]
-  wire  _GEN_71 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_41; // @[GPIOPeripheral.scala 152:25 162:29]
-  wire  serial_read = 3'h0 == read_state_reg ? 1'h0 : _GEN_71; // @[GPIOPeripheral.scala 152:25 162:29]
-  wire [7:0] _readReg_T_1 = {serial_read,readReg[7:1]}; // @[GPIOPeripheral.scala 156:40]
-  wire  _T_9 = io_mem_ifc_address == 32'h10; // @[GPIOPeripheral.scala 180:37]
+  wire  gpio_direction_clock; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_reset; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_read_data; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_write_data; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_rd; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_wr; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_conf_output_0; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_conf_output_1; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_conf_output_2; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_conf_output_3; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_conf_output_4; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_conf_output_5; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_conf_output_6; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_direction_io_conf_output_7; // @[GPIOPeripheral.scala 49:37]
+  wire  gpio_pullup_clock; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_reset; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_read_data; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_write_data; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_rd; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_wr; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_conf_output_0; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_conf_output_1; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_conf_output_2; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_conf_output_3; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_conf_output_4; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_conf_output_5; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_conf_output_6; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pullup_io_conf_output_7; // @[GPIOPeripheral.scala 50:37]
+  wire  gpio_pulldown_clock; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_reset; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_read_data; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_write_data; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_rd; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_wr; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_conf_output_0; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_conf_output_1; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_conf_output_2; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_conf_output_3; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_conf_output_4; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_conf_output_5; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_conf_output_6; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_pulldown_io_conf_output_7; // @[GPIOPeripheral.scala 51:37]
+  wire  gpio_opendrain_clock; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_reset; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_read_data; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_write_data; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_rd; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_wr; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_conf_output_0; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_conf_output_1; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_conf_output_2; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_conf_output_3; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_conf_output_4; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_conf_output_5; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_conf_output_6; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_opendrain_io_conf_output_7; // @[GPIOPeripheral.scala 52:37]
+  wire  gpio_drivestrength_clock; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_reset; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_read_data; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_write_data; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_rd; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_wr; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_conf_output_0; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_conf_output_1; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_conf_output_2; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_conf_output_3; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_conf_output_4; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_conf_output_5; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_conf_output_6; // @[GPIOPeripheral.scala 53:37]
+  wire  gpio_drivestrength_io_conf_output_7; // @[GPIOPeripheral.scala 53:37]
+  wire  pwm_polarity_clock; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_reset; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_read_data; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_write_data; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_rd; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_wr; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_conf_output_0; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_conf_output_1; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_conf_output_2; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_conf_output_3; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_conf_output_4; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_conf_output_5; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_conf_output_6; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_polarity_io_conf_output_7; // @[GPIOPeripheral.scala 54:37]
+  wire  pwm_enable_clock; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_reset; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_read_data; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_write_data; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_rd; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_wr; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_conf_output_0; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_conf_output_1; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_conf_output_2; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_conf_output_3; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_conf_output_4; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_conf_output_5; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_conf_output_6; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_enable_io_conf_output_7; // @[GPIOPeripheral.scala 56:37]
+  wire  pwm_duty_cycle_clock; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_reset; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_read_data; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_write_data; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_rd; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_wr; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_conf_output_0; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_conf_output_1; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_conf_output_2; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_conf_output_3; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_conf_output_4; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_conf_output_5; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_conf_output_6; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_duty_cycle_io_conf_output_7; // @[GPIOPeripheral.scala 57:37]
+  wire  pwm_prescaler_clock; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_reset; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_read_data; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_write_data; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_rd; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_wr; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_conf_output_0; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_conf_output_1; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_conf_output_2; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_conf_output_3; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_conf_output_4; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_conf_output_5; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_conf_output_6; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_prescaler_io_conf_output_7; // @[GPIOPeripheral.scala 58:37]
+  wire  pwm_div_clock; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_reset; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_read_data; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_write_data; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_rd; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_wr; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_conf_output_0; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_conf_output_1; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_conf_output_2; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_conf_output_3; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_conf_output_4; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_conf_output_5; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_conf_output_6; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_div_io_conf_output_7; // @[GPIOPeripheral.scala 59:37]
+  wire  pwm_period_clock; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_reset; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_read_data; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_write_data; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_rd; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_wr; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_conf_output_0; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_conf_output_1; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_conf_output_2; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_conf_output_3; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_conf_output_4; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_conf_output_5; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_conf_output_6; // @[GPIOPeripheral.scala 60:37]
+  wire  pwm_period_io_conf_output_7; // @[GPIOPeripheral.scala 60:37]
+  wire  gpio_module_0_clock; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_0_reset; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_0_io_gpio_direction; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_0_io_gpio_output; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_0_io_gpio_input; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_0_io_pwm_div; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_0_io_duty_cycle; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_0_io_pwm_period; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_0_io_pwm_polarity; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_0_io_pwm_en; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_1_clock; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_1_reset; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_1_io_gpio_direction; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_1_io_gpio_output; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_1_io_gpio_input; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_1_io_pwm_div; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_1_io_duty_cycle; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_1_io_pwm_period; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_1_io_pwm_polarity; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_1_io_pwm_en; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_2_clock; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_2_reset; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_2_io_gpio_direction; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_2_io_gpio_output; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_2_io_gpio_input; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_2_io_pwm_div; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_2_io_duty_cycle; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_2_io_pwm_period; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_2_io_pwm_polarity; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_2_io_pwm_en; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_3_clock; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_3_reset; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_3_io_gpio_direction; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_3_io_gpio_output; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_3_io_gpio_input; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_3_io_pwm_div; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_3_io_duty_cycle; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_3_io_pwm_period; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_3_io_pwm_polarity; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_3_io_pwm_en; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_4_clock; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_4_reset; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_4_io_gpio_direction; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_4_io_gpio_output; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_4_io_gpio_input; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_4_io_pwm_div; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_4_io_duty_cycle; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_4_io_pwm_period; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_4_io_pwm_polarity; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_4_io_pwm_en; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_5_clock; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_5_reset; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_5_io_gpio_direction; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_5_io_gpio_output; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_5_io_gpio_input; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_5_io_pwm_div; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_5_io_duty_cycle; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_5_io_pwm_period; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_5_io_pwm_polarity; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_5_io_pwm_en; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_6_clock; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_6_reset; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_6_io_gpio_direction; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_6_io_gpio_output; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_6_io_gpio_input; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_6_io_pwm_div; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_6_io_duty_cycle; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_6_io_pwm_period; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_6_io_pwm_polarity; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_6_io_pwm_en; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_7_clock; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_7_reset; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_7_io_gpio_direction; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_7_io_gpio_output; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_7_io_gpio_input; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_7_io_pwm_div; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_7_io_duty_cycle; // @[GPIOPeripheral.scala 64:23]
+  wire [7:0] gpio_module_7_io_pwm_period; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_7_io_pwm_polarity; // @[GPIOPeripheral.scala 64:23]
+  wire  gpio_module_7_io_pwm_en; // @[GPIOPeripheral.scala 64:23]
+  reg [7:0] gpio_output; // @[GPIOPeripheral.scala 46:38]
+  reg [7:0] gpio_input_0; // @[GPIOPeripheral.scala 47:34]
+  reg [7:0] gpio_input_1; // @[GPIOPeripheral.scala 47:34]
+  reg [7:0] gpio_input_2; // @[GPIOPeripheral.scala 47:34]
+  reg [7:0] gpio_input_3; // @[GPIOPeripheral.scala 47:34]
+  reg [7:0] gpio_input_4; // @[GPIOPeripheral.scala 47:34]
+  reg [7:0] gpio_input_5; // @[GPIOPeripheral.scala 47:34]
+  reg [7:0] gpio_input_6; // @[GPIOPeripheral.scala 47:34]
+  reg [7:0] gpio_input_7; // @[GPIOPeripheral.scala 47:34]
+  reg  para_read_en; // @[GPIOPeripheral.scala 141:34]
+  reg [31:0] readReg; // @[GPIOPeripheral.scala 142:34]
+  reg [2:0] read_state_reg; // @[GPIOPeripheral.scala 154:34]
+  wire  _T_13 = 32'h0 == io_mem_ifc_address; // @[GPIOPeripheral.scala 186:40]
+  wire  _GEN_6 = 32'h118 == io_mem_ifc_address & pwm_prescaler_io_read_data; // @[GPIOPeripheral.scala 147:25 186:40 216:49]
+  wire  _GEN_8 = 32'h110 == io_mem_ifc_address ? pwm_duty_cycle_io_read_data : _GEN_6; // @[GPIOPeripheral.scala 186:40 212:49]
+  wire  _GEN_11 = 32'h100 == io_mem_ifc_address ? pwm_enable_io_read_data : _GEN_8; // @[GPIOPeripheral.scala 186:40 208:49]
+  wire  _GEN_15 = 32'h30 == io_mem_ifc_address ? gpio_drivestrength_io_read_data : _GEN_11; // @[GPIOPeripheral.scala 186:40 204:49]
+  wire  _GEN_20 = 32'h28 == io_mem_ifc_address ? gpio_opendrain_io_read_data : _GEN_15; // @[GPIOPeripheral.scala 186:40 200:49]
+  wire  _GEN_26 = 32'h20 == io_mem_ifc_address ? gpio_pulldown_io_read_data : _GEN_20; // @[GPIOPeripheral.scala 186:40 196:49]
+  wire  _GEN_33 = 32'h18 == io_mem_ifc_address ? gpio_pullup_io_read_data : _GEN_26; // @[GPIOPeripheral.scala 186:40 192:49]
+  wire  _GEN_41 = 32'h0 == io_mem_ifc_address ? gpio_direction_io_read_data : _GEN_33; // @[GPIOPeripheral.scala 186:40 188:49]
+  wire  _GEN_71 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_41; // @[GPIOPeripheral.scala 147:25 157:29]
+  wire  serial_read = 3'h0 == read_state_reg ? 1'h0 : _GEN_71; // @[GPIOPeripheral.scala 147:25 157:29]
+  wire [7:0] _readReg_T_1 = {serial_read,readReg[7:1]}; // @[GPIOPeripheral.scala 151:40]
+  wire  _T_9 = io_mem_ifc_address == 32'h10; // @[GPIOPeripheral.scala 175:37]
   wire [87:0] _parallel_read_T_1 = {24'h0,gpio_input_7,gpio_input_6,gpio_input_5,gpio_input_4,gpio_input_3,gpio_input_2,
     gpio_input_1,gpio_input_0}; // @[Cat.scala 33:92]
-  wire [87:0] _GEN_5 = _T_9 ? _parallel_read_T_1 : {{80'd0}, gpio_output}; // @[GPIOPeripheral.scala 181:13 182:37 184:37]
-  wire [87:0] _GEN_67 = 3'h4 == read_state_reg ? _GEN_5 : 88'h0; // @[GPIOPeripheral.scala 151:25 162:29]
-  wire [87:0] _GEN_84 = 3'h0 == read_state_reg ? 88'h0 : _GEN_67; // @[GPIOPeripheral.scala 151:25 162:29]
-  wire [31:0] parallel_read = _GEN_84[31:0]; // @[GPIOPeripheral.scala 148:31]
-  reg [3:0] n_shift_read; // @[GPIOPeripheral.scala 160:34]
-  wire  _T_4 = io_mem_ifc_address == 32'h8; // @[GPIOPeripheral.scala 169:41]
-  wire  _T_5 = _T_9 | _T_4; // @[GPIOPeripheral.scala 168:78]
-  wire  _GEN_3 = io_mem_ifc_rd ? _T_5 : para_read_en; // @[GPIOPeripheral.scala 167:33 146:34]
-  wire [3:0] _n_shift_read_T_1 = n_shift_read + 4'h1; // @[GPIOPeripheral.scala 190:53]
-  wire  _GEN_10 = 32'h110 == io_mem_ifc_address ? 1'h0 : 32'h118 == io_mem_ifc_address; // @[GPIOPeripheral.scala 191:40 121:41]
-  wire  _GEN_13 = 32'h100 == io_mem_ifc_address ? 1'h0 : 32'h110 == io_mem_ifc_address; // @[GPIOPeripheral.scala 191:40 117:41]
-  wire  _GEN_14 = 32'h100 == io_mem_ifc_address ? 1'h0 : _GEN_10; // @[GPIOPeripheral.scala 191:40 121:41]
-  wire  _GEN_17 = 32'h30 == io_mem_ifc_address ? 1'h0 : 32'h100 == io_mem_ifc_address; // @[GPIOPeripheral.scala 191:40 113:41]
-  wire  _GEN_18 = 32'h30 == io_mem_ifc_address ? 1'h0 : _GEN_13; // @[GPIOPeripheral.scala 191:40 117:41]
-  wire  _GEN_19 = 32'h30 == io_mem_ifc_address ? 1'h0 : _GEN_14; // @[GPIOPeripheral.scala 191:40 121:41]
-  wire  _GEN_22 = 32'h28 == io_mem_ifc_address ? 1'h0 : 32'h30 == io_mem_ifc_address; // @[GPIOPeripheral.scala 191:40 109:41]
-  wire  _GEN_23 = 32'h28 == io_mem_ifc_address ? 1'h0 : _GEN_17; // @[GPIOPeripheral.scala 191:40 113:41]
-  wire  _GEN_24 = 32'h28 == io_mem_ifc_address ? 1'h0 : _GEN_18; // @[GPIOPeripheral.scala 191:40 117:41]
-  wire  _GEN_25 = 32'h28 == io_mem_ifc_address ? 1'h0 : _GEN_19; // @[GPIOPeripheral.scala 191:40 121:41]
-  wire  _GEN_28 = 32'h20 == io_mem_ifc_address ? 1'h0 : 32'h28 == io_mem_ifc_address; // @[GPIOPeripheral.scala 191:40 105:41]
-  wire  _GEN_29 = 32'h20 == io_mem_ifc_address ? 1'h0 : _GEN_22; // @[GPIOPeripheral.scala 191:40 109:41]
-  wire  _GEN_30 = 32'h20 == io_mem_ifc_address ? 1'h0 : _GEN_23; // @[GPIOPeripheral.scala 191:40 113:41]
-  wire  _GEN_31 = 32'h20 == io_mem_ifc_address ? 1'h0 : _GEN_24; // @[GPIOPeripheral.scala 191:40 117:41]
-  wire  _GEN_32 = 32'h20 == io_mem_ifc_address ? 1'h0 : _GEN_25; // @[GPIOPeripheral.scala 191:40 121:41]
-  wire  _GEN_35 = 32'h18 == io_mem_ifc_address ? 1'h0 : 32'h20 == io_mem_ifc_address; // @[GPIOPeripheral.scala 191:40 101:41]
-  wire  _GEN_36 = 32'h18 == io_mem_ifc_address ? 1'h0 : _GEN_28; // @[GPIOPeripheral.scala 191:40 105:41]
-  wire  _GEN_37 = 32'h18 == io_mem_ifc_address ? 1'h0 : _GEN_29; // @[GPIOPeripheral.scala 191:40 109:41]
-  wire  _GEN_38 = 32'h18 == io_mem_ifc_address ? 1'h0 : _GEN_30; // @[GPIOPeripheral.scala 191:40 113:41]
-  wire  _GEN_39 = 32'h18 == io_mem_ifc_address ? 1'h0 : _GEN_31; // @[GPIOPeripheral.scala 191:40 117:41]
-  wire  _GEN_40 = 32'h18 == io_mem_ifc_address ? 1'h0 : _GEN_32; // @[GPIOPeripheral.scala 191:40 121:41]
-  wire  _GEN_43 = 32'h0 == io_mem_ifc_address ? 1'h0 : 32'h18 == io_mem_ifc_address; // @[GPIOPeripheral.scala 191:40 97:41]
-  wire  _GEN_44 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_35; // @[GPIOPeripheral.scala 191:40 101:41]
-  wire  _GEN_45 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_36; // @[GPIOPeripheral.scala 191:40 105:41]
-  wire  _GEN_46 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_37; // @[GPIOPeripheral.scala 191:40 109:41]
-  wire  _GEN_47 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_38; // @[GPIOPeripheral.scala 191:40 113:41]
-  wire  _GEN_48 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_39; // @[GPIOPeripheral.scala 191:40 117:41]
-  wire  _GEN_49 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_40; // @[GPIOPeripheral.scala 191:40 121:41]
-  wire [3:0] _GEN_50 = n_shift_read == 4'h7 ? 4'h0 : _n_shift_read_T_1; // @[GPIOPeripheral.scala 190:37 226:50 227:45]
-  wire [1:0] _GEN_51 = n_shift_read == 4'h7 ? 2'h3 : 2'h2; // @[GPIOPeripheral.scala 226:50 228:45 230:45]
-  wire [2:0] _GEN_53 = 3'h3 == read_state_reg ? 3'h0 : read_state_reg; // @[GPIOPeripheral.scala 162:29 159:34 235:37]
-  wire  _GEN_72 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _T_13; // @[GPIOPeripheral.scala 162:29 93:41]
-  wire  _GEN_73 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_43; // @[GPIOPeripheral.scala 162:29 97:41]
-  wire  _GEN_74 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_44; // @[GPIOPeripheral.scala 162:29 101:41]
-  wire  _GEN_75 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_45; // @[GPIOPeripheral.scala 162:29 105:41]
-  wire  _GEN_76 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_46; // @[GPIOPeripheral.scala 162:29 109:41]
-  wire  _GEN_77 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_47; // @[GPIOPeripheral.scala 162:29 113:41]
-  wire  _GEN_78 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_48; // @[GPIOPeripheral.scala 162:29 117:41]
-  wire  _GEN_79 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_49; // @[GPIOPeripheral.scala 162:29 121:41]
-  wire  _GEN_82 = 3'h0 == read_state_reg ? _GEN_3 : para_read_en; // @[GPIOPeripheral.scala 162:29 146:34]
-  reg  para_write_en; // @[GPIOPeripheral.scala 241:38]
-  reg [31:0] writeReg; // @[GPIOPeripheral.scala 242:38]
-  reg [31:0] writeAddrReg; // @[GPIOPeripheral.scala 243:38]
-  wire [7:0] _writeReg_T_2 = {writeReg[0],writeReg[7:1]}; // @[GPIOPeripheral.scala 248:44]
-  reg [2:0] write_state_reg; // @[GPIOPeripheral.scala 251:38]
-  reg [3:0] n_shift_write; // @[GPIOPeripheral.scala 252:38]
-  wire  _T_30 = _T_4 | _T_9; // @[GPIOPeripheral.scala 264:79]
-  wire  _GEN_98 = io_mem_ifc_wr ? _T_30 : 1'h1; // @[GPIOPeripheral.scala 263:33 258:37]
-  wire  _T_34 = writeAddrReg == 32'h8; // @[GPIOPeripheral.scala 275:31]
-  wire [31:0] _GEN_99 = _T_34 ? writeReg : {{24'd0}, gpio_output}; // @[GPIOPeripheral.scala 276:13 277:37 40:38]
-  wire  _GEN_100 = _T_34 ? gpio_module_0_io_gpio_input : writeReg[0]; // @[GPIOPeripheral.scala 276:13 61:32 279:37]
-  wire  _GEN_101 = _T_34 ? gpio_module_1_io_gpio_input : writeReg[1]; // @[GPIOPeripheral.scala 276:13 61:32 279:37]
-  wire  _GEN_102 = _T_34 ? gpio_module_2_io_gpio_input : writeReg[2]; // @[GPIOPeripheral.scala 276:13 61:32 279:37]
-  wire  _GEN_103 = _T_34 ? gpio_module_3_io_gpio_input : writeReg[3]; // @[GPIOPeripheral.scala 276:13 61:32 279:37]
-  wire  _GEN_104 = _T_34 ? gpio_module_4_io_gpio_input : writeReg[4]; // @[GPIOPeripheral.scala 276:13 61:32 279:37]
-  wire  _GEN_105 = _T_34 ? gpio_module_5_io_gpio_input : writeReg[5]; // @[GPIOPeripheral.scala 276:13 61:32 279:37]
-  wire  _GEN_106 = _T_34 ? gpio_module_6_io_gpio_input : writeReg[6]; // @[GPIOPeripheral.scala 276:13 61:32 279:37]
-  wire  _GEN_107 = _T_34 ? gpio_module_7_io_gpio_input : writeReg[7]; // @[GPIOPeripheral.scala 276:13 61:32 279:37]
-  wire [3:0] _n_shift_write_T_1 = n_shift_write + 4'h1; // @[GPIOPeripheral.scala 286:54]
-  wire  _T_47 = 32'h0 == writeAddrReg; // @[GPIOPeripheral.scala 288:34]
-  wire  _GEN_109 = 32'h118 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 288:34 123:41 319:57]
-  wire  _GEN_111 = 32'h110 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 288:34 119:41 315:57]
-  wire  _GEN_112 = 32'h110 == writeAddrReg ? 1'h0 : 32'h118 == writeAddrReg; // @[GPIOPeripheral.scala 288:34 122:41]
-  wire  _GEN_113 = 32'h110 == writeAddrReg ? 1'h0 : _GEN_109; // @[GPIOPeripheral.scala 288:34 123:41]
-  wire  _GEN_115 = 32'h100 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 288:34 115:41 311:57]
-  wire  _GEN_116 = 32'h100 == writeAddrReg ? 1'h0 : 32'h110 == writeAddrReg; // @[GPIOPeripheral.scala 288:34 118:41]
-  wire  _GEN_117 = 32'h100 == writeAddrReg ? 1'h0 : _GEN_111; // @[GPIOPeripheral.scala 288:34 119:41]
-  wire  _GEN_118 = 32'h100 == writeAddrReg ? 1'h0 : _GEN_112; // @[GPIOPeripheral.scala 288:34 122:41]
-  wire  _GEN_119 = 32'h100 == writeAddrReg ? 1'h0 : _GEN_113; // @[GPIOPeripheral.scala 288:34 123:41]
-  wire  _GEN_121 = 32'h30 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 288:34 111:41 307:57]
-  wire  _GEN_122 = 32'h30 == writeAddrReg ? 1'h0 : 32'h100 == writeAddrReg; // @[GPIOPeripheral.scala 288:34 114:41]
-  wire  _GEN_123 = 32'h30 == writeAddrReg ? 1'h0 : _GEN_115; // @[GPIOPeripheral.scala 288:34 115:41]
-  wire  _GEN_124 = 32'h30 == writeAddrReg ? 1'h0 : _GEN_116; // @[GPIOPeripheral.scala 288:34 118:41]
-  wire  _GEN_125 = 32'h30 == writeAddrReg ? 1'h0 : _GEN_117; // @[GPIOPeripheral.scala 288:34 119:41]
-  wire  _GEN_126 = 32'h30 == writeAddrReg ? 1'h0 : _GEN_118; // @[GPIOPeripheral.scala 288:34 122:41]
-  wire  _GEN_127 = 32'h30 == writeAddrReg ? 1'h0 : _GEN_119; // @[GPIOPeripheral.scala 288:34 123:41]
-  wire  _GEN_129 = 32'h28 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 288:34 107:41 303:57]
-  wire  _GEN_130 = 32'h28 == writeAddrReg ? 1'h0 : 32'h30 == writeAddrReg; // @[GPIOPeripheral.scala 288:34 110:41]
-  wire  _GEN_131 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_121; // @[GPIOPeripheral.scala 288:34 111:41]
-  wire  _GEN_132 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_122; // @[GPIOPeripheral.scala 288:34 114:41]
-  wire  _GEN_133 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_123; // @[GPIOPeripheral.scala 288:34 115:41]
-  wire  _GEN_134 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_124; // @[GPIOPeripheral.scala 288:34 118:41]
-  wire  _GEN_135 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_125; // @[GPIOPeripheral.scala 288:34 119:41]
-  wire  _GEN_136 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_126; // @[GPIOPeripheral.scala 288:34 122:41]
-  wire  _GEN_137 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_127; // @[GPIOPeripheral.scala 288:34 123:41]
-  wire  _GEN_139 = 32'h20 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 288:34 103:41 299:57]
-  wire  _GEN_140 = 32'h20 == writeAddrReg ? 1'h0 : 32'h28 == writeAddrReg; // @[GPIOPeripheral.scala 288:34 106:41]
-  wire  _GEN_141 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_129; // @[GPIOPeripheral.scala 288:34 107:41]
-  wire  _GEN_142 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_130; // @[GPIOPeripheral.scala 288:34 110:41]
-  wire  _GEN_143 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_131; // @[GPIOPeripheral.scala 288:34 111:41]
-  wire  _GEN_144 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_132; // @[GPIOPeripheral.scala 288:34 114:41]
-  wire  _GEN_145 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_133; // @[GPIOPeripheral.scala 288:34 115:41]
-  wire  _GEN_146 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_134; // @[GPIOPeripheral.scala 288:34 118:41]
-  wire  _GEN_147 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_135; // @[GPIOPeripheral.scala 288:34 119:41]
-  wire  _GEN_148 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_136; // @[GPIOPeripheral.scala 288:34 122:41]
-  wire  _GEN_149 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_137; // @[GPIOPeripheral.scala 288:34 123:41]
-  wire  _GEN_151 = 32'h18 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 288:34 295:57 99:41]
-  wire  _GEN_152 = 32'h18 == writeAddrReg ? 1'h0 : 32'h20 == writeAddrReg; // @[GPIOPeripheral.scala 288:34 102:41]
-  wire  _GEN_153 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_139; // @[GPIOPeripheral.scala 288:34 103:41]
-  wire  _GEN_154 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_140; // @[GPIOPeripheral.scala 288:34 106:41]
-  wire  _GEN_155 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_141; // @[GPIOPeripheral.scala 288:34 107:41]
-  wire  _GEN_156 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_142; // @[GPIOPeripheral.scala 288:34 110:41]
-  wire  _GEN_157 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_143; // @[GPIOPeripheral.scala 288:34 111:41]
-  wire  _GEN_158 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_144; // @[GPIOPeripheral.scala 288:34 114:41]
-  wire  _GEN_159 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_145; // @[GPIOPeripheral.scala 288:34 115:41]
-  wire  _GEN_160 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_146; // @[GPIOPeripheral.scala 288:34 118:41]
-  wire  _GEN_161 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_147; // @[GPIOPeripheral.scala 288:34 119:41]
-  wire  _GEN_162 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_148; // @[GPIOPeripheral.scala 288:34 122:41]
-  wire  _GEN_163 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_149; // @[GPIOPeripheral.scala 288:34 123:41]
-  wire  _GEN_165 = 32'h0 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 288:34 291:57 95:41]
-  wire  _GEN_166 = 32'h0 == writeAddrReg ? 1'h0 : 32'h18 == writeAddrReg; // @[GPIOPeripheral.scala 288:34 98:41]
-  wire  _GEN_167 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_151; // @[GPIOPeripheral.scala 288:34 99:41]
-  wire  _GEN_168 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_152; // @[GPIOPeripheral.scala 288:34 102:41]
-  wire  _GEN_169 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_153; // @[GPIOPeripheral.scala 288:34 103:41]
-  wire  _GEN_170 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_154; // @[GPIOPeripheral.scala 288:34 106:41]
-  wire  _GEN_171 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_155; // @[GPIOPeripheral.scala 288:34 107:41]
-  wire  _GEN_172 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_156; // @[GPIOPeripheral.scala 288:34 110:41]
-  wire  _GEN_173 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_157; // @[GPIOPeripheral.scala 288:34 111:41]
-  wire  _GEN_174 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_158; // @[GPIOPeripheral.scala 288:34 114:41]
-  wire  _GEN_175 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_159; // @[GPIOPeripheral.scala 288:34 115:41]
-  wire  _GEN_176 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_160; // @[GPIOPeripheral.scala 288:34 118:41]
-  wire  _GEN_177 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_161; // @[GPIOPeripheral.scala 288:34 119:41]
-  wire  _GEN_178 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_162; // @[GPIOPeripheral.scala 288:34 122:41]
-  wire  _GEN_179 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_163; // @[GPIOPeripheral.scala 288:34 123:41]
-  wire  _GEN_180 = n_shift_write == 4'h7 ? 1'h0 : _T_47; // @[GPIOPeripheral.scala 323:51 324:45]
-  wire [3:0] _GEN_181 = n_shift_write == 4'h7 ? 4'h0 : _n_shift_write_T_1; // @[GPIOPeripheral.scala 286:37 323:51 325:45]
-  wire [1:0] _GEN_182 = n_shift_write == 4'h7 ? 2'h3 : 2'h2; // @[GPIOPeripheral.scala 323:51 326:45 328:45]
-  wire [2:0] _GEN_185 = 3'h3 == write_state_reg ? 3'h0 : write_state_reg; // @[GPIOPeripheral.scala 254:30 251:38 335:45]
-  wire  _GEN_186 = 3'h2 == write_state_reg ? 1'h0 : para_write_en; // @[GPIOPeripheral.scala 254:30 285:37 241:38]
-  wire [31:0] _GEN_206 = 3'h4 == write_state_reg ? _GEN_99 : {{24'd0}, gpio_output}; // @[GPIOPeripheral.scala 254:30 40:38]
-  wire  _GEN_207 = 3'h4 == write_state_reg ? _GEN_100 : gpio_module_0_io_gpio_input; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_208 = 3'h4 == write_state_reg ? _GEN_101 : gpio_module_1_io_gpio_input; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_209 = 3'h4 == write_state_reg ? _GEN_102 : gpio_module_2_io_gpio_input; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_210 = 3'h4 == write_state_reg ? _GEN_103 : gpio_module_3_io_gpio_input; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_211 = 3'h4 == write_state_reg ? _GEN_104 : gpio_module_4_io_gpio_input; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_212 = 3'h4 == write_state_reg ? _GEN_105 : gpio_module_5_io_gpio_input; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_213 = 3'h4 == write_state_reg ? _GEN_106 : gpio_module_6_io_gpio_input; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_214 = 3'h4 == write_state_reg ? _GEN_107 : gpio_module_7_io_gpio_input; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_217 = 3'h4 == write_state_reg ? para_write_en : _GEN_186; // @[GPIOPeripheral.scala 254:30 241:38]
-  wire  _GEN_219 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_180; // @[GPIOPeripheral.scala 254:30 94:41]
-  wire  _GEN_220 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_165; // @[GPIOPeripheral.scala 254:30 95:41]
-  wire  _GEN_221 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_166; // @[GPIOPeripheral.scala 254:30 98:41]
-  wire  _GEN_222 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_167; // @[GPIOPeripheral.scala 254:30 99:41]
-  wire  _GEN_223 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_168; // @[GPIOPeripheral.scala 254:30 102:41]
-  wire  _GEN_224 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_169; // @[GPIOPeripheral.scala 254:30 103:41]
-  wire  _GEN_225 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_170; // @[GPIOPeripheral.scala 254:30 106:41]
-  wire  _GEN_226 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_171; // @[GPIOPeripheral.scala 254:30 107:41]
-  wire  _GEN_227 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_172; // @[GPIOPeripheral.scala 254:30 110:41]
-  wire  _GEN_228 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_173; // @[GPIOPeripheral.scala 254:30 111:41]
-  wire  _GEN_229 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_174; // @[GPIOPeripheral.scala 254:30 114:41]
-  wire  _GEN_230 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_175; // @[GPIOPeripheral.scala 254:30 115:41]
-  wire  _GEN_231 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_176; // @[GPIOPeripheral.scala 254:30 118:41]
-  wire  _GEN_232 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_177; // @[GPIOPeripheral.scala 254:30 119:41]
-  wire  _GEN_233 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_178; // @[GPIOPeripheral.scala 254:30 122:41]
-  wire  _GEN_234 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_179; // @[GPIOPeripheral.scala 254:30 123:41]
-  wire  _GEN_237 = 3'h0 == write_state_reg ? _GEN_98 : _GEN_217; // @[GPIOPeripheral.scala 254:30]
-  wire [31:0] _GEN_241 = 3'h0 == write_state_reg ? {{24'd0}, gpio_output} : _GEN_206; // @[GPIOPeripheral.scala 254:30 40:38]
-  wire  _GEN_242 = 3'h0 == write_state_reg ? gpio_module_0_io_gpio_input : _GEN_207; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_243 = 3'h0 == write_state_reg ? gpio_module_1_io_gpio_input : _GEN_208; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_244 = 3'h0 == write_state_reg ? gpio_module_2_io_gpio_input : _GEN_209; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_245 = 3'h0 == write_state_reg ? gpio_module_3_io_gpio_input : _GEN_210; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_246 = 3'h0 == write_state_reg ? gpio_module_4_io_gpio_input : _GEN_211; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_247 = 3'h0 == write_state_reg ? gpio_module_5_io_gpio_input : _GEN_212; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_248 = 3'h0 == write_state_reg ? gpio_module_6_io_gpio_input : _GEN_213; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire  _GEN_249 = 3'h0 == write_state_reg ? gpio_module_7_io_gpio_input : _GEN_214; // @[GPIOPeripheral.scala 254:30 61:32]
-  wire [31:0] _GEN_54 = reset ? 32'hf : _GEN_241; // @[GPIOPeripheral.scala 40:{38,38}]
-  GPIOShiftRegister gpio_direction ( // @[GPIOPeripheral.scala 43:37]
+  wire [87:0] _GEN_5 = _T_9 ? _parallel_read_T_1 : {{80'd0}, gpio_output}; // @[GPIOPeripheral.scala 176:13 177:37 179:37]
+  wire [87:0] _GEN_67 = 3'h4 == read_state_reg ? _GEN_5 : 88'h0; // @[GPIOPeripheral.scala 146:25 157:29]
+  wire [87:0] _GEN_84 = 3'h0 == read_state_reg ? 88'h0 : _GEN_67; // @[GPIOPeripheral.scala 146:25 157:29]
+  wire [31:0] parallel_read = _GEN_84[31:0]; // @[GPIOPeripheral.scala 143:31]
+  reg [3:0] n_shift_read; // @[GPIOPeripheral.scala 155:34]
+  wire  _T_4 = io_mem_ifc_address == 32'h8; // @[GPIOPeripheral.scala 164:41]
+  wire  _T_5 = _T_9 | _T_4; // @[GPIOPeripheral.scala 163:78]
+  wire  _GEN_3 = io_mem_ifc_rd ? _T_5 : para_read_en; // @[GPIOPeripheral.scala 162:33 141:34]
+  wire [3:0] _n_shift_read_T_1 = n_shift_read + 4'h1; // @[GPIOPeripheral.scala 185:53]
+  wire  _GEN_10 = 32'h110 == io_mem_ifc_address ? 1'h0 : 32'h118 == io_mem_ifc_address; // @[GPIOPeripheral.scala 186:40 116:41]
+  wire  _GEN_13 = 32'h100 == io_mem_ifc_address ? 1'h0 : 32'h110 == io_mem_ifc_address; // @[GPIOPeripheral.scala 186:40 112:41]
+  wire  _GEN_14 = 32'h100 == io_mem_ifc_address ? 1'h0 : _GEN_10; // @[GPIOPeripheral.scala 186:40 116:41]
+  wire  _GEN_17 = 32'h30 == io_mem_ifc_address ? 1'h0 : 32'h100 == io_mem_ifc_address; // @[GPIOPeripheral.scala 186:40 108:41]
+  wire  _GEN_18 = 32'h30 == io_mem_ifc_address ? 1'h0 : _GEN_13; // @[GPIOPeripheral.scala 186:40 112:41]
+  wire  _GEN_19 = 32'h30 == io_mem_ifc_address ? 1'h0 : _GEN_14; // @[GPIOPeripheral.scala 186:40 116:41]
+  wire  _GEN_22 = 32'h28 == io_mem_ifc_address ? 1'h0 : 32'h30 == io_mem_ifc_address; // @[GPIOPeripheral.scala 186:40 104:41]
+  wire  _GEN_23 = 32'h28 == io_mem_ifc_address ? 1'h0 : _GEN_17; // @[GPIOPeripheral.scala 186:40 108:41]
+  wire  _GEN_24 = 32'h28 == io_mem_ifc_address ? 1'h0 : _GEN_18; // @[GPIOPeripheral.scala 186:40 112:41]
+  wire  _GEN_25 = 32'h28 == io_mem_ifc_address ? 1'h0 : _GEN_19; // @[GPIOPeripheral.scala 186:40 116:41]
+  wire  _GEN_28 = 32'h20 == io_mem_ifc_address ? 1'h0 : 32'h28 == io_mem_ifc_address; // @[GPIOPeripheral.scala 186:40 100:41]
+  wire  _GEN_29 = 32'h20 == io_mem_ifc_address ? 1'h0 : _GEN_22; // @[GPIOPeripheral.scala 186:40 104:41]
+  wire  _GEN_30 = 32'h20 == io_mem_ifc_address ? 1'h0 : _GEN_23; // @[GPIOPeripheral.scala 186:40 108:41]
+  wire  _GEN_31 = 32'h20 == io_mem_ifc_address ? 1'h0 : _GEN_24; // @[GPIOPeripheral.scala 186:40 112:41]
+  wire  _GEN_32 = 32'h20 == io_mem_ifc_address ? 1'h0 : _GEN_25; // @[GPIOPeripheral.scala 186:40 116:41]
+  wire  _GEN_35 = 32'h18 == io_mem_ifc_address ? 1'h0 : 32'h20 == io_mem_ifc_address; // @[GPIOPeripheral.scala 186:40 96:41]
+  wire  _GEN_36 = 32'h18 == io_mem_ifc_address ? 1'h0 : _GEN_28; // @[GPIOPeripheral.scala 186:40 100:41]
+  wire  _GEN_37 = 32'h18 == io_mem_ifc_address ? 1'h0 : _GEN_29; // @[GPIOPeripheral.scala 186:40 104:41]
+  wire  _GEN_38 = 32'h18 == io_mem_ifc_address ? 1'h0 : _GEN_30; // @[GPIOPeripheral.scala 186:40 108:41]
+  wire  _GEN_39 = 32'h18 == io_mem_ifc_address ? 1'h0 : _GEN_31; // @[GPIOPeripheral.scala 186:40 112:41]
+  wire  _GEN_40 = 32'h18 == io_mem_ifc_address ? 1'h0 : _GEN_32; // @[GPIOPeripheral.scala 186:40 116:41]
+  wire  _GEN_43 = 32'h0 == io_mem_ifc_address ? 1'h0 : 32'h18 == io_mem_ifc_address; // @[GPIOPeripheral.scala 186:40 92:41]
+  wire  _GEN_44 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_35; // @[GPIOPeripheral.scala 186:40 96:41]
+  wire  _GEN_45 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_36; // @[GPIOPeripheral.scala 186:40 100:41]
+  wire  _GEN_46 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_37; // @[GPIOPeripheral.scala 186:40 104:41]
+  wire  _GEN_47 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_38; // @[GPIOPeripheral.scala 186:40 108:41]
+  wire  _GEN_48 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_39; // @[GPIOPeripheral.scala 186:40 112:41]
+  wire  _GEN_49 = 32'h0 == io_mem_ifc_address ? 1'h0 : _GEN_40; // @[GPIOPeripheral.scala 186:40 116:41]
+  wire [3:0] _GEN_50 = n_shift_read == 4'h7 ? 4'h0 : _n_shift_read_T_1; // @[GPIOPeripheral.scala 185:37 221:50 222:45]
+  wire [1:0] _GEN_51 = n_shift_read == 4'h7 ? 2'h3 : 2'h2; // @[GPIOPeripheral.scala 221:50 223:45 225:45]
+  wire [2:0] _GEN_53 = 3'h3 == read_state_reg ? 3'h0 : read_state_reg; // @[GPIOPeripheral.scala 157:29 154:34 230:37]
+  wire  _GEN_72 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _T_13; // @[GPIOPeripheral.scala 157:29 88:41]
+  wire  _GEN_73 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_43; // @[GPIOPeripheral.scala 157:29 92:41]
+  wire  _GEN_74 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_44; // @[GPIOPeripheral.scala 157:29 96:41]
+  wire  _GEN_75 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_45; // @[GPIOPeripheral.scala 157:29 100:41]
+  wire  _GEN_76 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_46; // @[GPIOPeripheral.scala 157:29 104:41]
+  wire  _GEN_77 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_47; // @[GPIOPeripheral.scala 157:29 108:41]
+  wire  _GEN_78 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_48; // @[GPIOPeripheral.scala 157:29 112:41]
+  wire  _GEN_79 = 3'h4 == read_state_reg ? 1'h0 : 3'h2 == read_state_reg & _GEN_49; // @[GPIOPeripheral.scala 157:29 116:41]
+  wire  _GEN_82 = 3'h0 == read_state_reg ? _GEN_3 : para_read_en; // @[GPIOPeripheral.scala 157:29 141:34]
+  reg  para_write_en; // @[GPIOPeripheral.scala 236:38]
+  reg [31:0] writeReg; // @[GPIOPeripheral.scala 237:38]
+  reg [31:0] writeAddrReg; // @[GPIOPeripheral.scala 238:38]
+  wire [7:0] _writeReg_T_2 = {writeReg[0],writeReg[7:1]}; // @[GPIOPeripheral.scala 243:44]
+  reg [2:0] write_state_reg; // @[GPIOPeripheral.scala 246:38]
+  reg [3:0] n_shift_write; // @[GPIOPeripheral.scala 247:38]
+  wire  _T_30 = _T_4 | _T_9; // @[GPIOPeripheral.scala 259:79]
+  wire  _GEN_98 = io_mem_ifc_wr ? _T_30 : 1'h1; // @[GPIOPeripheral.scala 258:33 253:37]
+  wire  _T_34 = writeAddrReg == 32'h8; // @[GPIOPeripheral.scala 270:31]
+  wire [31:0] _GEN_99 = _T_34 ? writeReg : {{24'd0}, gpio_output}; // @[GPIOPeripheral.scala 271:13 272:37 46:38]
+  wire  _GEN_100 = _T_34 ? gpio_module_0_io_gpio_input : writeReg[0]; // @[GPIOPeripheral.scala 271:13 66:32 274:37]
+  wire  _GEN_101 = _T_34 ? gpio_module_1_io_gpio_input : writeReg[1]; // @[GPIOPeripheral.scala 271:13 66:32 274:37]
+  wire  _GEN_102 = _T_34 ? gpio_module_2_io_gpio_input : writeReg[2]; // @[GPIOPeripheral.scala 271:13 66:32 274:37]
+  wire  _GEN_103 = _T_34 ? gpio_module_3_io_gpio_input : writeReg[3]; // @[GPIOPeripheral.scala 271:13 66:32 274:37]
+  wire  _GEN_104 = _T_34 ? gpio_module_4_io_gpio_input : writeReg[4]; // @[GPIOPeripheral.scala 271:13 66:32 274:37]
+  wire  _GEN_105 = _T_34 ? gpio_module_5_io_gpio_input : writeReg[5]; // @[GPIOPeripheral.scala 271:13 66:32 274:37]
+  wire  _GEN_106 = _T_34 ? gpio_module_6_io_gpio_input : writeReg[6]; // @[GPIOPeripheral.scala 271:13 66:32 274:37]
+  wire  _GEN_107 = _T_34 ? gpio_module_7_io_gpio_input : writeReg[7]; // @[GPIOPeripheral.scala 271:13 66:32 274:37]
+  wire [3:0] _n_shift_write_T_1 = n_shift_write + 4'h1; // @[GPIOPeripheral.scala 281:54]
+  wire  _T_47 = 32'h0 == writeAddrReg; // @[GPIOPeripheral.scala 283:34]
+  wire  _GEN_109 = 32'h118 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 283:34 118:41 314:57]
+  wire  _GEN_111 = 32'h110 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 283:34 114:41 310:57]
+  wire  _GEN_112 = 32'h110 == writeAddrReg ? 1'h0 : 32'h118 == writeAddrReg; // @[GPIOPeripheral.scala 283:34 117:41]
+  wire  _GEN_113 = 32'h110 == writeAddrReg ? 1'h0 : _GEN_109; // @[GPIOPeripheral.scala 283:34 118:41]
+  wire  _GEN_115 = 32'h100 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 283:34 110:41 306:57]
+  wire  _GEN_116 = 32'h100 == writeAddrReg ? 1'h0 : 32'h110 == writeAddrReg; // @[GPIOPeripheral.scala 283:34 113:41]
+  wire  _GEN_117 = 32'h100 == writeAddrReg ? 1'h0 : _GEN_111; // @[GPIOPeripheral.scala 283:34 114:41]
+  wire  _GEN_118 = 32'h100 == writeAddrReg ? 1'h0 : _GEN_112; // @[GPIOPeripheral.scala 283:34 117:41]
+  wire  _GEN_119 = 32'h100 == writeAddrReg ? 1'h0 : _GEN_113; // @[GPIOPeripheral.scala 283:34 118:41]
+  wire  _GEN_121 = 32'h30 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 283:34 106:41 302:57]
+  wire  _GEN_122 = 32'h30 == writeAddrReg ? 1'h0 : 32'h100 == writeAddrReg; // @[GPIOPeripheral.scala 283:34 109:41]
+  wire  _GEN_123 = 32'h30 == writeAddrReg ? 1'h0 : _GEN_115; // @[GPIOPeripheral.scala 283:34 110:41]
+  wire  _GEN_124 = 32'h30 == writeAddrReg ? 1'h0 : _GEN_116; // @[GPIOPeripheral.scala 283:34 113:41]
+  wire  _GEN_125 = 32'h30 == writeAddrReg ? 1'h0 : _GEN_117; // @[GPIOPeripheral.scala 283:34 114:41]
+  wire  _GEN_126 = 32'h30 == writeAddrReg ? 1'h0 : _GEN_118; // @[GPIOPeripheral.scala 283:34 117:41]
+  wire  _GEN_127 = 32'h30 == writeAddrReg ? 1'h0 : _GEN_119; // @[GPIOPeripheral.scala 283:34 118:41]
+  wire  _GEN_129 = 32'h28 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 283:34 102:41 298:57]
+  wire  _GEN_130 = 32'h28 == writeAddrReg ? 1'h0 : 32'h30 == writeAddrReg; // @[GPIOPeripheral.scala 283:34 105:41]
+  wire  _GEN_131 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_121; // @[GPIOPeripheral.scala 283:34 106:41]
+  wire  _GEN_132 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_122; // @[GPIOPeripheral.scala 283:34 109:41]
+  wire  _GEN_133 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_123; // @[GPIOPeripheral.scala 283:34 110:41]
+  wire  _GEN_134 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_124; // @[GPIOPeripheral.scala 283:34 113:41]
+  wire  _GEN_135 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_125; // @[GPIOPeripheral.scala 283:34 114:41]
+  wire  _GEN_136 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_126; // @[GPIOPeripheral.scala 283:34 117:41]
+  wire  _GEN_137 = 32'h28 == writeAddrReg ? 1'h0 : _GEN_127; // @[GPIOPeripheral.scala 283:34 118:41]
+  wire  _GEN_139 = 32'h20 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 283:34 294:57 98:41]
+  wire  _GEN_140 = 32'h20 == writeAddrReg ? 1'h0 : 32'h28 == writeAddrReg; // @[GPIOPeripheral.scala 283:34 101:41]
+  wire  _GEN_141 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_129; // @[GPIOPeripheral.scala 283:34 102:41]
+  wire  _GEN_142 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_130; // @[GPIOPeripheral.scala 283:34 105:41]
+  wire  _GEN_143 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_131; // @[GPIOPeripheral.scala 283:34 106:41]
+  wire  _GEN_144 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_132; // @[GPIOPeripheral.scala 283:34 109:41]
+  wire  _GEN_145 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_133; // @[GPIOPeripheral.scala 283:34 110:41]
+  wire  _GEN_146 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_134; // @[GPIOPeripheral.scala 283:34 113:41]
+  wire  _GEN_147 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_135; // @[GPIOPeripheral.scala 283:34 114:41]
+  wire  _GEN_148 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_136; // @[GPIOPeripheral.scala 283:34 117:41]
+  wire  _GEN_149 = 32'h20 == writeAddrReg ? 1'h0 : _GEN_137; // @[GPIOPeripheral.scala 283:34 118:41]
+  wire  _GEN_151 = 32'h18 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 283:34 290:57 94:41]
+  wire  _GEN_152 = 32'h18 == writeAddrReg ? 1'h0 : 32'h20 == writeAddrReg; // @[GPIOPeripheral.scala 283:34 97:41]
+  wire  _GEN_153 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_139; // @[GPIOPeripheral.scala 283:34 98:41]
+  wire  _GEN_154 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_140; // @[GPIOPeripheral.scala 283:34 101:41]
+  wire  _GEN_155 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_141; // @[GPIOPeripheral.scala 283:34 102:41]
+  wire  _GEN_156 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_142; // @[GPIOPeripheral.scala 283:34 105:41]
+  wire  _GEN_157 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_143; // @[GPIOPeripheral.scala 283:34 106:41]
+  wire  _GEN_158 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_144; // @[GPIOPeripheral.scala 283:34 109:41]
+  wire  _GEN_159 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_145; // @[GPIOPeripheral.scala 283:34 110:41]
+  wire  _GEN_160 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_146; // @[GPIOPeripheral.scala 283:34 113:41]
+  wire  _GEN_161 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_147; // @[GPIOPeripheral.scala 283:34 114:41]
+  wire  _GEN_162 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_148; // @[GPIOPeripheral.scala 283:34 117:41]
+  wire  _GEN_163 = 32'h18 == writeAddrReg ? 1'h0 : _GEN_149; // @[GPIOPeripheral.scala 283:34 118:41]
+  wire  _GEN_165 = 32'h0 == writeAddrReg & writeReg[0]; // @[GPIOPeripheral.scala 283:34 286:57 90:41]
+  wire  _GEN_166 = 32'h0 == writeAddrReg ? 1'h0 : 32'h18 == writeAddrReg; // @[GPIOPeripheral.scala 283:34 93:41]
+  wire  _GEN_167 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_151; // @[GPIOPeripheral.scala 283:34 94:41]
+  wire  _GEN_168 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_152; // @[GPIOPeripheral.scala 283:34 97:41]
+  wire  _GEN_169 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_153; // @[GPIOPeripheral.scala 283:34 98:41]
+  wire  _GEN_170 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_154; // @[GPIOPeripheral.scala 283:34 101:41]
+  wire  _GEN_171 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_155; // @[GPIOPeripheral.scala 283:34 102:41]
+  wire  _GEN_172 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_156; // @[GPIOPeripheral.scala 283:34 105:41]
+  wire  _GEN_173 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_157; // @[GPIOPeripheral.scala 283:34 106:41]
+  wire  _GEN_174 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_158; // @[GPIOPeripheral.scala 283:34 109:41]
+  wire  _GEN_175 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_159; // @[GPIOPeripheral.scala 283:34 110:41]
+  wire  _GEN_176 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_160; // @[GPIOPeripheral.scala 283:34 113:41]
+  wire  _GEN_177 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_161; // @[GPIOPeripheral.scala 283:34 114:41]
+  wire  _GEN_178 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_162; // @[GPIOPeripheral.scala 283:34 117:41]
+  wire  _GEN_179 = 32'h0 == writeAddrReg ? 1'h0 : _GEN_163; // @[GPIOPeripheral.scala 283:34 118:41]
+  wire  _GEN_180 = n_shift_write == 4'h7 ? 1'h0 : _T_47; // @[GPIOPeripheral.scala 318:51 319:45]
+  wire [3:0] _GEN_181 = n_shift_write == 4'h7 ? 4'h0 : _n_shift_write_T_1; // @[GPIOPeripheral.scala 281:37 318:51 320:45]
+  wire [1:0] _GEN_182 = n_shift_write == 4'h7 ? 2'h3 : 2'h2; // @[GPIOPeripheral.scala 318:51 321:45 323:45]
+  wire [2:0] _GEN_185 = 3'h3 == write_state_reg ? 3'h0 : write_state_reg; // @[GPIOPeripheral.scala 249:30 246:38 330:45]
+  wire  _GEN_186 = 3'h2 == write_state_reg ? 1'h0 : para_write_en; // @[GPIOPeripheral.scala 249:30 280:37 236:38]
+  wire [31:0] _GEN_206 = 3'h4 == write_state_reg ? _GEN_99 : {{24'd0}, gpio_output}; // @[GPIOPeripheral.scala 249:30 46:38]
+  wire  _GEN_207 = 3'h4 == write_state_reg ? _GEN_100 : gpio_module_0_io_gpio_input; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_208 = 3'h4 == write_state_reg ? _GEN_101 : gpio_module_1_io_gpio_input; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_209 = 3'h4 == write_state_reg ? _GEN_102 : gpio_module_2_io_gpio_input; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_210 = 3'h4 == write_state_reg ? _GEN_103 : gpio_module_3_io_gpio_input; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_211 = 3'h4 == write_state_reg ? _GEN_104 : gpio_module_4_io_gpio_input; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_212 = 3'h4 == write_state_reg ? _GEN_105 : gpio_module_5_io_gpio_input; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_213 = 3'h4 == write_state_reg ? _GEN_106 : gpio_module_6_io_gpio_input; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_214 = 3'h4 == write_state_reg ? _GEN_107 : gpio_module_7_io_gpio_input; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_217 = 3'h4 == write_state_reg ? para_write_en : _GEN_186; // @[GPIOPeripheral.scala 249:30 236:38]
+  wire  _GEN_219 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_180; // @[GPIOPeripheral.scala 249:30 89:41]
+  wire  _GEN_220 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_165; // @[GPIOPeripheral.scala 249:30 90:41]
+  wire  _GEN_221 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_166; // @[GPIOPeripheral.scala 249:30 93:41]
+  wire  _GEN_222 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_167; // @[GPIOPeripheral.scala 249:30 94:41]
+  wire  _GEN_223 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_168; // @[GPIOPeripheral.scala 249:30 97:41]
+  wire  _GEN_224 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_169; // @[GPIOPeripheral.scala 249:30 98:41]
+  wire  _GEN_225 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_170; // @[GPIOPeripheral.scala 249:30 101:41]
+  wire  _GEN_226 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_171; // @[GPIOPeripheral.scala 249:30 102:41]
+  wire  _GEN_227 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_172; // @[GPIOPeripheral.scala 249:30 105:41]
+  wire  _GEN_228 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_173; // @[GPIOPeripheral.scala 249:30 106:41]
+  wire  _GEN_229 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_174; // @[GPIOPeripheral.scala 249:30 109:41]
+  wire  _GEN_230 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_175; // @[GPIOPeripheral.scala 249:30 110:41]
+  wire  _GEN_231 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_176; // @[GPIOPeripheral.scala 249:30 113:41]
+  wire  _GEN_232 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_177; // @[GPIOPeripheral.scala 249:30 114:41]
+  wire  _GEN_233 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_178; // @[GPIOPeripheral.scala 249:30 117:41]
+  wire  _GEN_234 = 3'h4 == write_state_reg ? 1'h0 : 3'h2 == write_state_reg & _GEN_179; // @[GPIOPeripheral.scala 249:30 118:41]
+  wire  _GEN_237 = 3'h0 == write_state_reg ? _GEN_98 : _GEN_217; // @[GPIOPeripheral.scala 249:30]
+  wire [31:0] _GEN_241 = 3'h0 == write_state_reg ? {{24'd0}, gpio_output} : _GEN_206; // @[GPIOPeripheral.scala 249:30 46:38]
+  wire  _GEN_242 = 3'h0 == write_state_reg ? gpio_module_0_io_gpio_input : _GEN_207; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_243 = 3'h0 == write_state_reg ? gpio_module_1_io_gpio_input : _GEN_208; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_244 = 3'h0 == write_state_reg ? gpio_module_2_io_gpio_input : _GEN_209; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_245 = 3'h0 == write_state_reg ? gpio_module_3_io_gpio_input : _GEN_210; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_246 = 3'h0 == write_state_reg ? gpio_module_4_io_gpio_input : _GEN_211; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_247 = 3'h0 == write_state_reg ? gpio_module_5_io_gpio_input : _GEN_212; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_248 = 3'h0 == write_state_reg ? gpio_module_6_io_gpio_input : _GEN_213; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire  _GEN_249 = 3'h0 == write_state_reg ? gpio_module_7_io_gpio_input : _GEN_214; // @[GPIOPeripheral.scala 249:30 66:32]
+  wire [31:0] _GEN_54 = reset ? 32'hf : _GEN_241; // @[GPIOPeripheral.scala 46:{38,38}]
+  GPIOShiftRegister gpio_direction ( // @[GPIOPeripheral.scala 49:37]
     .clock(gpio_direction_clock),
     .reset(gpio_direction_reset),
     .io_read_data(gpio_direction_io_read_data),
@@ -1826,7 +1812,7 @@ module GPIOPeripheral(
     .io_conf_output_6(gpio_direction_io_conf_output_6),
     .io_conf_output_7(gpio_direction_io_conf_output_7)
   );
-  GPIOShiftRegister gpio_pullup ( // @[GPIOPeripheral.scala 44:37]
+  GPIOShiftRegister gpio_pullup ( // @[GPIOPeripheral.scala 50:37]
     .clock(gpio_pullup_clock),
     .reset(gpio_pullup_reset),
     .io_read_data(gpio_pullup_io_read_data),
@@ -1842,7 +1828,7 @@ module GPIOPeripheral(
     .io_conf_output_6(gpio_pullup_io_conf_output_6),
     .io_conf_output_7(gpio_pullup_io_conf_output_7)
   );
-  GPIOShiftRegister gpio_pulldown ( // @[GPIOPeripheral.scala 45:37]
+  GPIOShiftRegister gpio_pulldown ( // @[GPIOPeripheral.scala 51:37]
     .clock(gpio_pulldown_clock),
     .reset(gpio_pulldown_reset),
     .io_read_data(gpio_pulldown_io_read_data),
@@ -1858,7 +1844,7 @@ module GPIOPeripheral(
     .io_conf_output_6(gpio_pulldown_io_conf_output_6),
     .io_conf_output_7(gpio_pulldown_io_conf_output_7)
   );
-  GPIOShiftRegister gpio_opendrain ( // @[GPIOPeripheral.scala 46:37]
+  GPIOShiftRegister gpio_opendrain ( // @[GPIOPeripheral.scala 52:37]
     .clock(gpio_opendrain_clock),
     .reset(gpio_opendrain_reset),
     .io_read_data(gpio_opendrain_io_read_data),
@@ -1874,7 +1860,7 @@ module GPIOPeripheral(
     .io_conf_output_6(gpio_opendrain_io_conf_output_6),
     .io_conf_output_7(gpio_opendrain_io_conf_output_7)
   );
-  GPIOShiftRegister gpio_drivestrength ( // @[GPIOPeripheral.scala 47:37]
+  GPIOShiftRegister gpio_drivestrength ( // @[GPIOPeripheral.scala 53:37]
     .clock(gpio_drivestrength_clock),
     .reset(gpio_drivestrength_reset),
     .io_read_data(gpio_drivestrength_io_read_data),
@@ -1890,7 +1876,7 @@ module GPIOPeripheral(
     .io_conf_output_6(gpio_drivestrength_io_conf_output_6),
     .io_conf_output_7(gpio_drivestrength_io_conf_output_7)
   );
-  GPIOShiftRegister pwm_polarity ( // @[GPIOPeripheral.scala 48:37]
+  GPIOShiftRegister pwm_polarity ( // @[GPIOPeripheral.scala 54:37]
     .clock(pwm_polarity_clock),
     .reset(pwm_polarity_reset),
     .io_read_data(pwm_polarity_io_read_data),
@@ -1906,7 +1892,7 @@ module GPIOPeripheral(
     .io_conf_output_6(pwm_polarity_io_conf_output_6),
     .io_conf_output_7(pwm_polarity_io_conf_output_7)
   );
-  GPIOShiftRegister pwm_enable ( // @[GPIOPeripheral.scala 50:37]
+  GPIOShiftRegister pwm_enable ( // @[GPIOPeripheral.scala 56:37]
     .clock(pwm_enable_clock),
     .reset(pwm_enable_reset),
     .io_read_data(pwm_enable_io_read_data),
@@ -1922,7 +1908,7 @@ module GPIOPeripheral(
     .io_conf_output_6(pwm_enable_io_conf_output_6),
     .io_conf_output_7(pwm_enable_io_conf_output_7)
   );
-  GPIOShiftRegister pwm_duty_cycle ( // @[GPIOPeripheral.scala 51:37]
+  GPIOShiftRegister pwm_duty_cycle ( // @[GPIOPeripheral.scala 57:37]
     .clock(pwm_duty_cycle_clock),
     .reset(pwm_duty_cycle_reset),
     .io_read_data(pwm_duty_cycle_io_read_data),
@@ -1938,7 +1924,7 @@ module GPIOPeripheral(
     .io_conf_output_6(pwm_duty_cycle_io_conf_output_6),
     .io_conf_output_7(pwm_duty_cycle_io_conf_output_7)
   );
-  GPIOShiftRegister pwm_prescaler ( // @[GPIOPeripheral.scala 52:37]
+  GPIOShiftRegister pwm_prescaler ( // @[GPIOPeripheral.scala 58:37]
     .clock(pwm_prescaler_clock),
     .reset(pwm_prescaler_reset),
     .io_read_data(pwm_prescaler_io_read_data),
@@ -1954,7 +1940,7 @@ module GPIOPeripheral(
     .io_conf_output_6(pwm_prescaler_io_conf_output_6),
     .io_conf_output_7(pwm_prescaler_io_conf_output_7)
   );
-  GPIOShiftRegister pwm_div ( // @[GPIOPeripheral.scala 53:37]
+  GPIOShiftRegister pwm_div ( // @[GPIOPeripheral.scala 59:37]
     .clock(pwm_div_clock),
     .reset(pwm_div_reset),
     .io_read_data(pwm_div_io_read_data),
@@ -1970,7 +1956,7 @@ module GPIOPeripheral(
     .io_conf_output_6(pwm_div_io_conf_output_6),
     .io_conf_output_7(pwm_div_io_conf_output_7)
   );
-  GPIOShiftRegister pwm_period ( // @[GPIOPeripheral.scala 54:37]
+  GPIOShiftRegister pwm_period ( // @[GPIOPeripheral.scala 60:37]
     .clock(pwm_period_clock),
     .reset(pwm_period_reset),
     .io_read_data(pwm_period_io_read_data),
@@ -1986,7 +1972,7 @@ module GPIOPeripheral(
     .io_conf_output_6(pwm_period_io_conf_output_6),
     .io_conf_output_7(pwm_period_io_conf_output_7)
   );
-  GPIOModule gpio_module_0 ( // @[GPIOPeripheral.scala 59:23]
+  GPIOModule gpio_module_0 ( // @[GPIOPeripheral.scala 64:23]
     .clock(gpio_module_0_clock),
     .reset(gpio_module_0_reset),
     .io_gpio_direction(gpio_module_0_io_gpio_direction),
@@ -1998,7 +1984,7 @@ module GPIOPeripheral(
     .io_pwm_polarity(gpio_module_0_io_pwm_polarity),
     .io_pwm_en(gpio_module_0_io_pwm_en)
   );
-  GPIOModule gpio_module_1 ( // @[GPIOPeripheral.scala 59:23]
+  GPIOModule gpio_module_1 ( // @[GPIOPeripheral.scala 64:23]
     .clock(gpio_module_1_clock),
     .reset(gpio_module_1_reset),
     .io_gpio_direction(gpio_module_1_io_gpio_direction),
@@ -2010,7 +1996,7 @@ module GPIOPeripheral(
     .io_pwm_polarity(gpio_module_1_io_pwm_polarity),
     .io_pwm_en(gpio_module_1_io_pwm_en)
   );
-  GPIOModule gpio_module_2 ( // @[GPIOPeripheral.scala 59:23]
+  GPIOModule gpio_module_2 ( // @[GPIOPeripheral.scala 64:23]
     .clock(gpio_module_2_clock),
     .reset(gpio_module_2_reset),
     .io_gpio_direction(gpio_module_2_io_gpio_direction),
@@ -2022,7 +2008,7 @@ module GPIOPeripheral(
     .io_pwm_polarity(gpio_module_2_io_pwm_polarity),
     .io_pwm_en(gpio_module_2_io_pwm_en)
   );
-  GPIOModule gpio_module_3 ( // @[GPIOPeripheral.scala 59:23]
+  GPIOModule gpio_module_3 ( // @[GPIOPeripheral.scala 64:23]
     .clock(gpio_module_3_clock),
     .reset(gpio_module_3_reset),
     .io_gpio_direction(gpio_module_3_io_gpio_direction),
@@ -2034,7 +2020,7 @@ module GPIOPeripheral(
     .io_pwm_polarity(gpio_module_3_io_pwm_polarity),
     .io_pwm_en(gpio_module_3_io_pwm_en)
   );
-  GPIOModule gpio_module_4 ( // @[GPIOPeripheral.scala 59:23]
+  GPIOModule gpio_module_4 ( // @[GPIOPeripheral.scala 64:23]
     .clock(gpio_module_4_clock),
     .reset(gpio_module_4_reset),
     .io_gpio_direction(gpio_module_4_io_gpio_direction),
@@ -2046,7 +2032,7 @@ module GPIOPeripheral(
     .io_pwm_polarity(gpio_module_4_io_pwm_polarity),
     .io_pwm_en(gpio_module_4_io_pwm_en)
   );
-  GPIOModule gpio_module_5 ( // @[GPIOPeripheral.scala 59:23]
+  GPIOModule gpio_module_5 ( // @[GPIOPeripheral.scala 64:23]
     .clock(gpio_module_5_clock),
     .reset(gpio_module_5_reset),
     .io_gpio_direction(gpio_module_5_io_gpio_direction),
@@ -2058,7 +2044,7 @@ module GPIOPeripheral(
     .io_pwm_polarity(gpio_module_5_io_pwm_polarity),
     .io_pwm_en(gpio_module_5_io_pwm_en)
   );
-  GPIOModule gpio_module_6 ( // @[GPIOPeripheral.scala 59:23]
+  GPIOModule gpio_module_6 ( // @[GPIOPeripheral.scala 64:23]
     .clock(gpio_module_6_clock),
     .reset(gpio_module_6_reset),
     .io_gpio_direction(gpio_module_6_io_gpio_direction),
@@ -2070,7 +2056,7 @@ module GPIOPeripheral(
     .io_pwm_polarity(gpio_module_6_io_pwm_polarity),
     .io_pwm_en(gpio_module_6_io_pwm_en)
   );
-  GPIOModule gpio_module_7 ( // @[GPIOPeripheral.scala 59:23]
+  GPIOModule gpio_module_7 ( // @[GPIOPeripheral.scala 64:23]
     .clock(gpio_module_7_clock),
     .reset(gpio_module_7_reset),
     .io_gpio_direction(gpio_module_7_io_gpio_direction),
@@ -2082,136 +2068,136 @@ module GPIOPeripheral(
     .io_pwm_polarity(gpio_module_7_io_pwm_polarity),
     .io_pwm_en(gpio_module_7_io_pwm_en)
   );
-  assign io_mem_ifc_rdData = readReg; // @[GPIOPeripheral.scala 341:29]
+  assign io_mem_ifc_rdData = readReg; // @[GPIOPeripheral.scala 336:29]
   assign gpio_direction_clock = clock;
   assign gpio_direction_reset = reset;
-  assign gpio_direction_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_220; // @[GPIOPeripheral.scala 254:30 95:41]
-  assign gpio_direction_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_72; // @[GPIOPeripheral.scala 162:29 93:41]
-  assign gpio_direction_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_219; // @[GPIOPeripheral.scala 254:30 94:41]
+  assign gpio_direction_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_220; // @[GPIOPeripheral.scala 249:30 90:41]
+  assign gpio_direction_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_72; // @[GPIOPeripheral.scala 157:29 88:41]
+  assign gpio_direction_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_219; // @[GPIOPeripheral.scala 249:30 89:41]
   assign gpio_pullup_clock = clock;
   assign gpio_pullup_reset = reset;
-  assign gpio_pullup_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_222; // @[GPIOPeripheral.scala 254:30 99:41]
-  assign gpio_pullup_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_73; // @[GPIOPeripheral.scala 162:29 97:41]
-  assign gpio_pullup_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_221; // @[GPIOPeripheral.scala 254:30 98:41]
+  assign gpio_pullup_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_222; // @[GPIOPeripheral.scala 249:30 94:41]
+  assign gpio_pullup_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_73; // @[GPIOPeripheral.scala 157:29 92:41]
+  assign gpio_pullup_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_221; // @[GPIOPeripheral.scala 249:30 93:41]
   assign gpio_pulldown_clock = clock;
   assign gpio_pulldown_reset = reset;
-  assign gpio_pulldown_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_224; // @[GPIOPeripheral.scala 254:30 103:41]
-  assign gpio_pulldown_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_74; // @[GPIOPeripheral.scala 162:29 101:41]
-  assign gpio_pulldown_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_223; // @[GPIOPeripheral.scala 254:30 102:41]
+  assign gpio_pulldown_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_224; // @[GPIOPeripheral.scala 249:30 98:41]
+  assign gpio_pulldown_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_74; // @[GPIOPeripheral.scala 157:29 96:41]
+  assign gpio_pulldown_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_223; // @[GPIOPeripheral.scala 249:30 97:41]
   assign gpio_opendrain_clock = clock;
   assign gpio_opendrain_reset = reset;
-  assign gpio_opendrain_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_226; // @[GPIOPeripheral.scala 254:30 107:41]
-  assign gpio_opendrain_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_75; // @[GPIOPeripheral.scala 162:29 105:41]
-  assign gpio_opendrain_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_225; // @[GPIOPeripheral.scala 254:30 106:41]
+  assign gpio_opendrain_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_226; // @[GPIOPeripheral.scala 249:30 102:41]
+  assign gpio_opendrain_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_75; // @[GPIOPeripheral.scala 157:29 100:41]
+  assign gpio_opendrain_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_225; // @[GPIOPeripheral.scala 249:30 101:41]
   assign gpio_drivestrength_clock = clock;
   assign gpio_drivestrength_reset = reset;
-  assign gpio_drivestrength_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_228; // @[GPIOPeripheral.scala 254:30 111:41]
-  assign gpio_drivestrength_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_76; // @[GPIOPeripheral.scala 162:29 109:41]
-  assign gpio_drivestrength_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_227; // @[GPIOPeripheral.scala 254:30 110:41]
+  assign gpio_drivestrength_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_228; // @[GPIOPeripheral.scala 249:30 106:41]
+  assign gpio_drivestrength_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_76; // @[GPIOPeripheral.scala 157:29 104:41]
+  assign gpio_drivestrength_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_227; // @[GPIOPeripheral.scala 249:30 105:41]
   assign pwm_polarity_clock = clock;
   assign pwm_polarity_reset = reset;
-  assign pwm_polarity_io_write_data = 1'h0; // @[GPIOPeripheral.scala 131:41]
-  assign pwm_polarity_io_rd = 1'h0; // @[GPIOPeripheral.scala 129:41]
-  assign pwm_polarity_io_wr = 1'h0; // @[GPIOPeripheral.scala 130:41]
+  assign pwm_polarity_io_write_data = 1'h0; // @[GPIOPeripheral.scala 126:41]
+  assign pwm_polarity_io_rd = 1'h0; // @[GPIOPeripheral.scala 124:41]
+  assign pwm_polarity_io_wr = 1'h0; // @[GPIOPeripheral.scala 125:41]
   assign pwm_enable_clock = clock;
   assign pwm_enable_reset = reset;
-  assign pwm_enable_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_230; // @[GPIOPeripheral.scala 254:30 115:41]
-  assign pwm_enable_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_77; // @[GPIOPeripheral.scala 162:29 113:41]
-  assign pwm_enable_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_229; // @[GPIOPeripheral.scala 254:30 114:41]
+  assign pwm_enable_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_230; // @[GPIOPeripheral.scala 249:30 110:41]
+  assign pwm_enable_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_77; // @[GPIOPeripheral.scala 157:29 108:41]
+  assign pwm_enable_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_229; // @[GPIOPeripheral.scala 249:30 109:41]
   assign pwm_duty_cycle_clock = clock;
   assign pwm_duty_cycle_reset = reset;
-  assign pwm_duty_cycle_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_232; // @[GPIOPeripheral.scala 254:30 119:41]
-  assign pwm_duty_cycle_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_78; // @[GPIOPeripheral.scala 162:29 117:41]
-  assign pwm_duty_cycle_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_231; // @[GPIOPeripheral.scala 254:30 118:41]
+  assign pwm_duty_cycle_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_232; // @[GPIOPeripheral.scala 249:30 114:41]
+  assign pwm_duty_cycle_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_78; // @[GPIOPeripheral.scala 157:29 112:41]
+  assign pwm_duty_cycle_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_231; // @[GPIOPeripheral.scala 249:30 113:41]
   assign pwm_prescaler_clock = clock;
   assign pwm_prescaler_reset = reset;
-  assign pwm_prescaler_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_234; // @[GPIOPeripheral.scala 254:30 123:41]
-  assign pwm_prescaler_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_79; // @[GPIOPeripheral.scala 162:29 121:41]
-  assign pwm_prescaler_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_233; // @[GPIOPeripheral.scala 254:30 122:41]
+  assign pwm_prescaler_io_write_data = 3'h0 == write_state_reg ? 1'h0 : _GEN_234; // @[GPIOPeripheral.scala 249:30 118:41]
+  assign pwm_prescaler_io_rd = 3'h0 == read_state_reg ? 1'h0 : _GEN_79; // @[GPIOPeripheral.scala 157:29 116:41]
+  assign pwm_prescaler_io_wr = 3'h0 == write_state_reg ? 1'h0 : _GEN_233; // @[GPIOPeripheral.scala 249:30 117:41]
   assign pwm_div_clock = clock;
   assign pwm_div_reset = reset;
-  assign pwm_div_io_write_data = 1'h0; // @[GPIOPeripheral.scala 127:41]
-  assign pwm_div_io_rd = 1'h0; // @[GPIOPeripheral.scala 125:41]
-  assign pwm_div_io_wr = 1'h0; // @[GPIOPeripheral.scala 126:41]
+  assign pwm_div_io_write_data = 1'h0; // @[GPIOPeripheral.scala 122:41]
+  assign pwm_div_io_rd = 1'h0; // @[GPIOPeripheral.scala 120:41]
+  assign pwm_div_io_wr = 1'h0; // @[GPIOPeripheral.scala 121:41]
   assign pwm_period_clock = clock;
   assign pwm_period_reset = reset;
-  assign pwm_period_io_write_data = 1'h0; // @[GPIOPeripheral.scala 135:41]
-  assign pwm_period_io_rd = 1'h0; // @[GPIOPeripheral.scala 133:41]
-  assign pwm_period_io_wr = 1'h0; // @[GPIOPeripheral.scala 134:41]
+  assign pwm_period_io_write_data = 1'h0; // @[GPIOPeripheral.scala 130:41]
+  assign pwm_period_io_rd = 1'h0; // @[GPIOPeripheral.scala 128:41]
+  assign pwm_period_io_wr = 1'h0; // @[GPIOPeripheral.scala 129:41]
   assign gpio_module_0_clock = clock;
   assign gpio_module_0_reset = reset;
-  assign gpio_module_0_io_gpio_direction = gpio_direction_io_conf_output_0; // @[GPIOPeripheral.scala 62:32]
-  assign gpio_module_0_io_gpio_output = gpio_output[0]; // @[GPIOPeripheral.scala 60:46]
-  assign gpio_module_0_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_0}; // @[GPIOPeripheral.scala 68:32]
-  assign gpio_module_0_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_0}; // @[GPIOPeripheral.scala 69:32]
-  assign gpio_module_0_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_0}; // @[GPIOPeripheral.scala 70:32]
-  assign gpio_module_0_io_pwm_polarity = pwm_polarity_io_conf_output_0; // @[GPIOPeripheral.scala 71:32]
-  assign gpio_module_0_io_pwm_en = pwm_enable_io_conf_output_0; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_0_io_gpio_direction = gpio_direction_io_conf_output_0; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_0_io_gpio_output = gpio_output[0]; // @[GPIOPeripheral.scala 65:46]
+  assign gpio_module_0_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_0}; // @[GPIOPeripheral.scala 73:32]
+  assign gpio_module_0_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_0}; // @[GPIOPeripheral.scala 74:32]
+  assign gpio_module_0_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_0}; // @[GPIOPeripheral.scala 75:32]
+  assign gpio_module_0_io_pwm_polarity = pwm_polarity_io_conf_output_0; // @[GPIOPeripheral.scala 76:32]
+  assign gpio_module_0_io_pwm_en = pwm_enable_io_conf_output_0; // @[GPIOPeripheral.scala 72:32]
   assign gpio_module_1_clock = clock;
   assign gpio_module_1_reset = reset;
-  assign gpio_module_1_io_gpio_direction = gpio_direction_io_conf_output_1; // @[GPIOPeripheral.scala 62:32]
-  assign gpio_module_1_io_gpio_output = gpio_output[1]; // @[GPIOPeripheral.scala 60:46]
-  assign gpio_module_1_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_1}; // @[GPIOPeripheral.scala 68:32]
-  assign gpio_module_1_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_1}; // @[GPIOPeripheral.scala 69:32]
-  assign gpio_module_1_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_1}; // @[GPIOPeripheral.scala 70:32]
-  assign gpio_module_1_io_pwm_polarity = pwm_polarity_io_conf_output_1; // @[GPIOPeripheral.scala 71:32]
-  assign gpio_module_1_io_pwm_en = pwm_enable_io_conf_output_1; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_1_io_gpio_direction = gpio_direction_io_conf_output_1; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_1_io_gpio_output = gpio_output[1]; // @[GPIOPeripheral.scala 65:46]
+  assign gpio_module_1_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_1}; // @[GPIOPeripheral.scala 73:32]
+  assign gpio_module_1_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_1}; // @[GPIOPeripheral.scala 74:32]
+  assign gpio_module_1_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_1}; // @[GPIOPeripheral.scala 75:32]
+  assign gpio_module_1_io_pwm_polarity = pwm_polarity_io_conf_output_1; // @[GPIOPeripheral.scala 76:32]
+  assign gpio_module_1_io_pwm_en = pwm_enable_io_conf_output_1; // @[GPIOPeripheral.scala 72:32]
   assign gpio_module_2_clock = clock;
   assign gpio_module_2_reset = reset;
-  assign gpio_module_2_io_gpio_direction = gpio_direction_io_conf_output_2; // @[GPIOPeripheral.scala 62:32]
-  assign gpio_module_2_io_gpio_output = gpio_output[2]; // @[GPIOPeripheral.scala 60:46]
-  assign gpio_module_2_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_2}; // @[GPIOPeripheral.scala 68:32]
-  assign gpio_module_2_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_2}; // @[GPIOPeripheral.scala 69:32]
-  assign gpio_module_2_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_2}; // @[GPIOPeripheral.scala 70:32]
-  assign gpio_module_2_io_pwm_polarity = pwm_polarity_io_conf_output_2; // @[GPIOPeripheral.scala 71:32]
-  assign gpio_module_2_io_pwm_en = pwm_enable_io_conf_output_2; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_2_io_gpio_direction = gpio_direction_io_conf_output_2; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_2_io_gpio_output = gpio_output[2]; // @[GPIOPeripheral.scala 65:46]
+  assign gpio_module_2_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_2}; // @[GPIOPeripheral.scala 73:32]
+  assign gpio_module_2_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_2}; // @[GPIOPeripheral.scala 74:32]
+  assign gpio_module_2_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_2}; // @[GPIOPeripheral.scala 75:32]
+  assign gpio_module_2_io_pwm_polarity = pwm_polarity_io_conf_output_2; // @[GPIOPeripheral.scala 76:32]
+  assign gpio_module_2_io_pwm_en = pwm_enable_io_conf_output_2; // @[GPIOPeripheral.scala 72:32]
   assign gpio_module_3_clock = clock;
   assign gpio_module_3_reset = reset;
-  assign gpio_module_3_io_gpio_direction = gpio_direction_io_conf_output_3; // @[GPIOPeripheral.scala 62:32]
-  assign gpio_module_3_io_gpio_output = gpio_output[3]; // @[GPIOPeripheral.scala 60:46]
-  assign gpio_module_3_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_3}; // @[GPIOPeripheral.scala 68:32]
-  assign gpio_module_3_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_3}; // @[GPIOPeripheral.scala 69:32]
-  assign gpio_module_3_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_3}; // @[GPIOPeripheral.scala 70:32]
-  assign gpio_module_3_io_pwm_polarity = pwm_polarity_io_conf_output_3; // @[GPIOPeripheral.scala 71:32]
-  assign gpio_module_3_io_pwm_en = pwm_enable_io_conf_output_3; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_3_io_gpio_direction = gpio_direction_io_conf_output_3; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_3_io_gpio_output = gpio_output[3]; // @[GPIOPeripheral.scala 65:46]
+  assign gpio_module_3_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_3}; // @[GPIOPeripheral.scala 73:32]
+  assign gpio_module_3_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_3}; // @[GPIOPeripheral.scala 74:32]
+  assign gpio_module_3_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_3}; // @[GPIOPeripheral.scala 75:32]
+  assign gpio_module_3_io_pwm_polarity = pwm_polarity_io_conf_output_3; // @[GPIOPeripheral.scala 76:32]
+  assign gpio_module_3_io_pwm_en = pwm_enable_io_conf_output_3; // @[GPIOPeripheral.scala 72:32]
   assign gpio_module_4_clock = clock;
   assign gpio_module_4_reset = reset;
-  assign gpio_module_4_io_gpio_direction = gpio_direction_io_conf_output_4; // @[GPIOPeripheral.scala 62:32]
-  assign gpio_module_4_io_gpio_output = gpio_output[4]; // @[GPIOPeripheral.scala 60:46]
-  assign gpio_module_4_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_4}; // @[GPIOPeripheral.scala 68:32]
-  assign gpio_module_4_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_4}; // @[GPIOPeripheral.scala 69:32]
-  assign gpio_module_4_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_4}; // @[GPIOPeripheral.scala 70:32]
-  assign gpio_module_4_io_pwm_polarity = pwm_polarity_io_conf_output_4; // @[GPIOPeripheral.scala 71:32]
-  assign gpio_module_4_io_pwm_en = pwm_enable_io_conf_output_4; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_4_io_gpio_direction = gpio_direction_io_conf_output_4; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_4_io_gpio_output = gpio_output[4]; // @[GPIOPeripheral.scala 65:46]
+  assign gpio_module_4_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_4}; // @[GPIOPeripheral.scala 73:32]
+  assign gpio_module_4_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_4}; // @[GPIOPeripheral.scala 74:32]
+  assign gpio_module_4_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_4}; // @[GPIOPeripheral.scala 75:32]
+  assign gpio_module_4_io_pwm_polarity = pwm_polarity_io_conf_output_4; // @[GPIOPeripheral.scala 76:32]
+  assign gpio_module_4_io_pwm_en = pwm_enable_io_conf_output_4; // @[GPIOPeripheral.scala 72:32]
   assign gpio_module_5_clock = clock;
   assign gpio_module_5_reset = reset;
-  assign gpio_module_5_io_gpio_direction = gpio_direction_io_conf_output_5; // @[GPIOPeripheral.scala 62:32]
-  assign gpio_module_5_io_gpio_output = gpio_output[5]; // @[GPIOPeripheral.scala 60:46]
-  assign gpio_module_5_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_5}; // @[GPIOPeripheral.scala 68:32]
-  assign gpio_module_5_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_5}; // @[GPIOPeripheral.scala 69:32]
-  assign gpio_module_5_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_5}; // @[GPIOPeripheral.scala 70:32]
-  assign gpio_module_5_io_pwm_polarity = pwm_polarity_io_conf_output_5; // @[GPIOPeripheral.scala 71:32]
-  assign gpio_module_5_io_pwm_en = pwm_enable_io_conf_output_5; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_5_io_gpio_direction = gpio_direction_io_conf_output_5; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_5_io_gpio_output = gpio_output[5]; // @[GPIOPeripheral.scala 65:46]
+  assign gpio_module_5_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_5}; // @[GPIOPeripheral.scala 73:32]
+  assign gpio_module_5_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_5}; // @[GPIOPeripheral.scala 74:32]
+  assign gpio_module_5_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_5}; // @[GPIOPeripheral.scala 75:32]
+  assign gpio_module_5_io_pwm_polarity = pwm_polarity_io_conf_output_5; // @[GPIOPeripheral.scala 76:32]
+  assign gpio_module_5_io_pwm_en = pwm_enable_io_conf_output_5; // @[GPIOPeripheral.scala 72:32]
   assign gpio_module_6_clock = clock;
   assign gpio_module_6_reset = reset;
-  assign gpio_module_6_io_gpio_direction = gpio_direction_io_conf_output_6; // @[GPIOPeripheral.scala 62:32]
-  assign gpio_module_6_io_gpio_output = gpio_output[6]; // @[GPIOPeripheral.scala 60:46]
-  assign gpio_module_6_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_6}; // @[GPIOPeripheral.scala 68:32]
-  assign gpio_module_6_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_6}; // @[GPIOPeripheral.scala 69:32]
-  assign gpio_module_6_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_6}; // @[GPIOPeripheral.scala 70:32]
-  assign gpio_module_6_io_pwm_polarity = pwm_polarity_io_conf_output_6; // @[GPIOPeripheral.scala 71:32]
-  assign gpio_module_6_io_pwm_en = pwm_enable_io_conf_output_6; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_6_io_gpio_direction = gpio_direction_io_conf_output_6; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_6_io_gpio_output = gpio_output[6]; // @[GPIOPeripheral.scala 65:46]
+  assign gpio_module_6_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_6}; // @[GPIOPeripheral.scala 73:32]
+  assign gpio_module_6_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_6}; // @[GPIOPeripheral.scala 74:32]
+  assign gpio_module_6_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_6}; // @[GPIOPeripheral.scala 75:32]
+  assign gpio_module_6_io_pwm_polarity = pwm_polarity_io_conf_output_6; // @[GPIOPeripheral.scala 76:32]
+  assign gpio_module_6_io_pwm_en = pwm_enable_io_conf_output_6; // @[GPIOPeripheral.scala 72:32]
   assign gpio_module_7_clock = clock;
   assign gpio_module_7_reset = reset;
-  assign gpio_module_7_io_gpio_direction = gpio_direction_io_conf_output_7; // @[GPIOPeripheral.scala 62:32]
-  assign gpio_module_7_io_gpio_output = gpio_output[7]; // @[GPIOPeripheral.scala 60:46]
-  assign gpio_module_7_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_7}; // @[GPIOPeripheral.scala 68:32]
-  assign gpio_module_7_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_7}; // @[GPIOPeripheral.scala 69:32]
-  assign gpio_module_7_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_7}; // @[GPIOPeripheral.scala 70:32]
-  assign gpio_module_7_io_pwm_polarity = pwm_polarity_io_conf_output_7; // @[GPIOPeripheral.scala 71:32]
-  assign gpio_module_7_io_pwm_en = pwm_enable_io_conf_output_7; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_7_io_gpio_direction = gpio_direction_io_conf_output_7; // @[GPIOPeripheral.scala 67:32]
+  assign gpio_module_7_io_gpio_output = gpio_output[7]; // @[GPIOPeripheral.scala 65:46]
+  assign gpio_module_7_io_pwm_div = {{7'd0}, pwm_div_io_conf_output_7}; // @[GPIOPeripheral.scala 73:32]
+  assign gpio_module_7_io_duty_cycle = {{7'd0}, pwm_duty_cycle_io_conf_output_7}; // @[GPIOPeripheral.scala 74:32]
+  assign gpio_module_7_io_pwm_period = {{7'd0}, pwm_period_io_conf_output_7}; // @[GPIOPeripheral.scala 75:32]
+  assign gpio_module_7_io_pwm_polarity = pwm_polarity_io_conf_output_7; // @[GPIOPeripheral.scala 76:32]
+  assign gpio_module_7_io_pwm_en = pwm_enable_io_conf_output_7; // @[GPIOPeripheral.scala 72:32]
   always @(posedge clock) begin
-    gpio_output <= _GEN_54[7:0]; // @[GPIOPeripheral.scala 40:{38,38}]
+    gpio_output <= _GEN_54[7:0]; // @[GPIOPeripheral.scala 46:{38,38}]
     gpio_input_0 <= {{7'd0}, _GEN_242};
     gpio_input_1 <= {{7'd0}, _GEN_243};
     gpio_input_2 <= {{7'd0}, _GEN_244};
@@ -2220,78 +2206,78 @@ module GPIOPeripheral(
     gpio_input_5 <= {{7'd0}, _GEN_247};
     gpio_input_6 <= {{7'd0}, _GEN_248};
     gpio_input_7 <= {{7'd0}, _GEN_249};
-    para_read_en <= reset | _GEN_82; // @[GPIOPeripheral.scala 146:{34,34}]
-    if (reset) begin // @[GPIOPeripheral.scala 147:34]
-      readReg <= 32'h0; // @[GPIOPeripheral.scala 147:34]
-    end else if (para_read_en) begin // @[GPIOPeripheral.scala 153:25]
-      readReg <= parallel_read; // @[GPIOPeripheral.scala 154:25]
+    para_read_en <= reset | _GEN_82; // @[GPIOPeripheral.scala 141:{34,34}]
+    if (reset) begin // @[GPIOPeripheral.scala 142:34]
+      readReg <= 32'h0; // @[GPIOPeripheral.scala 142:34]
+    end else if (para_read_en) begin // @[GPIOPeripheral.scala 148:25]
+      readReg <= parallel_read; // @[GPIOPeripheral.scala 149:25]
     end else begin
-      readReg <= {{24'd0}, _readReg_T_1}; // @[GPIOPeripheral.scala 156:25]
+      readReg <= {{24'd0}, _readReg_T_1}; // @[GPIOPeripheral.scala 151:25]
     end
-    if (reset) begin // @[GPIOPeripheral.scala 159:34]
-      read_state_reg <= 3'h0; // @[GPIOPeripheral.scala 159:34]
-    end else if (3'h0 == read_state_reg) begin // @[GPIOPeripheral.scala 162:29]
-      if (io_mem_ifc_rd) begin // @[GPIOPeripheral.scala 167:33]
-        if (_T_5) begin // @[GPIOPeripheral.scala 170:17]
-          read_state_reg <= 3'h4; // @[GPIOPeripheral.scala 172:41]
+    if (reset) begin // @[GPIOPeripheral.scala 154:34]
+      read_state_reg <= 3'h0; // @[GPIOPeripheral.scala 154:34]
+    end else if (3'h0 == read_state_reg) begin // @[GPIOPeripheral.scala 157:29]
+      if (io_mem_ifc_rd) begin // @[GPIOPeripheral.scala 162:33]
+        if (_T_5) begin // @[GPIOPeripheral.scala 165:17]
+          read_state_reg <= 3'h4; // @[GPIOPeripheral.scala 167:41]
         end else begin
-          read_state_reg <= 3'h2; // @[GPIOPeripheral.scala 175:41]
+          read_state_reg <= 3'h2; // @[GPIOPeripheral.scala 170:41]
         end
       end
-    end else if (3'h4 == read_state_reg) begin // @[GPIOPeripheral.scala 162:29]
-      read_state_reg <= 3'h0; // @[GPIOPeripheral.scala 187:37]
-    end else if (3'h2 == read_state_reg) begin // @[GPIOPeripheral.scala 162:29]
+    end else if (3'h4 == read_state_reg) begin // @[GPIOPeripheral.scala 157:29]
+      read_state_reg <= 3'h0; // @[GPIOPeripheral.scala 182:37]
+    end else if (3'h2 == read_state_reg) begin // @[GPIOPeripheral.scala 157:29]
       read_state_reg <= {{1'd0}, _GEN_51};
     end else begin
       read_state_reg <= _GEN_53;
     end
-    if (reset) begin // @[GPIOPeripheral.scala 160:34]
-      n_shift_read <= 4'h0; // @[GPIOPeripheral.scala 160:34]
-    end else if (3'h0 == read_state_reg) begin // @[GPIOPeripheral.scala 162:29]
-      n_shift_read <= 4'h0; // @[GPIOPeripheral.scala 165:29]
-    end else if (!(3'h4 == read_state_reg)) begin // @[GPIOPeripheral.scala 162:29]
-      if (3'h2 == read_state_reg) begin // @[GPIOPeripheral.scala 162:29]
+    if (reset) begin // @[GPIOPeripheral.scala 155:34]
+      n_shift_read <= 4'h0; // @[GPIOPeripheral.scala 155:34]
+    end else if (3'h0 == read_state_reg) begin // @[GPIOPeripheral.scala 157:29]
+      n_shift_read <= 4'h0; // @[GPIOPeripheral.scala 160:29]
+    end else if (!(3'h4 == read_state_reg)) begin // @[GPIOPeripheral.scala 157:29]
+      if (3'h2 == read_state_reg) begin // @[GPIOPeripheral.scala 157:29]
         n_shift_read <= _GEN_50;
       end
     end
-    para_write_en <= reset | _GEN_237; // @[GPIOPeripheral.scala 241:{38,38}]
-    if (reset) begin // @[GPIOPeripheral.scala 242:38]
-      writeReg <= 32'h0; // @[GPIOPeripheral.scala 242:38]
-    end else if (3'h0 == write_state_reg) begin // @[GPIOPeripheral.scala 254:30]
-      writeReg <= io_mem_ifc_wrData; // @[GPIOPeripheral.scala 260:37]
-    end else if (para_write_en) begin // @[GPIOPeripheral.scala 245:26]
-      writeReg <= io_mem_ifc_wrData; // @[GPIOPeripheral.scala 246:29]
+    para_write_en <= reset | _GEN_237; // @[GPIOPeripheral.scala 236:{38,38}]
+    if (reset) begin // @[GPIOPeripheral.scala 237:38]
+      writeReg <= 32'h0; // @[GPIOPeripheral.scala 237:38]
+    end else if (3'h0 == write_state_reg) begin // @[GPIOPeripheral.scala 249:30]
+      writeReg <= io_mem_ifc_wrData; // @[GPIOPeripheral.scala 255:37]
+    end else if (para_write_en) begin // @[GPIOPeripheral.scala 240:26]
+      writeReg <= io_mem_ifc_wrData; // @[GPIOPeripheral.scala 241:29]
     end else begin
-      writeReg <= {{24'd0}, _writeReg_T_2}; // @[GPIOPeripheral.scala 248:29]
+      writeReg <= {{24'd0}, _writeReg_T_2}; // @[GPIOPeripheral.scala 243:29]
     end
-    if (reset) begin // @[GPIOPeripheral.scala 243:38]
-      writeAddrReg <= 32'h0; // @[GPIOPeripheral.scala 243:38]
-    end else if (3'h0 == write_state_reg) begin // @[GPIOPeripheral.scala 254:30]
-      writeAddrReg <= io_mem_ifc_address; // @[GPIOPeripheral.scala 261:37]
+    if (reset) begin // @[GPIOPeripheral.scala 238:38]
+      writeAddrReg <= 32'h0; // @[GPIOPeripheral.scala 238:38]
+    end else if (3'h0 == write_state_reg) begin // @[GPIOPeripheral.scala 249:30]
+      writeAddrReg <= io_mem_ifc_address; // @[GPIOPeripheral.scala 256:37]
     end
-    if (reset) begin // @[GPIOPeripheral.scala 251:38]
-      write_state_reg <= 3'h0; // @[GPIOPeripheral.scala 251:38]
-    end else if (3'h0 == write_state_reg) begin // @[GPIOPeripheral.scala 254:30]
-      if (io_mem_ifc_wr) begin // @[GPIOPeripheral.scala 263:33]
-        if (_T_30) begin // @[GPIOPeripheral.scala 266:17]
-          write_state_reg <= 3'h4; // @[GPIOPeripheral.scala 267:43]
+    if (reset) begin // @[GPIOPeripheral.scala 246:38]
+      write_state_reg <= 3'h0; // @[GPIOPeripheral.scala 246:38]
+    end else if (3'h0 == write_state_reg) begin // @[GPIOPeripheral.scala 249:30]
+      if (io_mem_ifc_wr) begin // @[GPIOPeripheral.scala 258:33]
+        if (_T_30) begin // @[GPIOPeripheral.scala 261:17]
+          write_state_reg <= 3'h4; // @[GPIOPeripheral.scala 262:43]
         end else begin
-          write_state_reg <= 3'h2; // @[GPIOPeripheral.scala 270:43]
+          write_state_reg <= 3'h2; // @[GPIOPeripheral.scala 265:43]
         end
       end
-    end else if (3'h4 == write_state_reg) begin // @[GPIOPeripheral.scala 254:30]
-      write_state_reg <= 3'h0; // @[GPIOPeripheral.scala 282:37]
-    end else if (3'h2 == write_state_reg) begin // @[GPIOPeripheral.scala 254:30]
+    end else if (3'h4 == write_state_reg) begin // @[GPIOPeripheral.scala 249:30]
+      write_state_reg <= 3'h0; // @[GPIOPeripheral.scala 277:37]
+    end else if (3'h2 == write_state_reg) begin // @[GPIOPeripheral.scala 249:30]
       write_state_reg <= {{1'd0}, _GEN_182};
     end else begin
       write_state_reg <= _GEN_185;
     end
-    if (reset) begin // @[GPIOPeripheral.scala 252:38]
-      n_shift_write <= 4'h0; // @[GPIOPeripheral.scala 252:38]
-    end else if (3'h0 == write_state_reg) begin // @[GPIOPeripheral.scala 254:30]
-      n_shift_write <= 4'h0; // @[GPIOPeripheral.scala 257:37]
-    end else if (!(3'h4 == write_state_reg)) begin // @[GPIOPeripheral.scala 254:30]
-      if (3'h2 == write_state_reg) begin // @[GPIOPeripheral.scala 254:30]
+    if (reset) begin // @[GPIOPeripheral.scala 247:38]
+      n_shift_write <= 4'h0; // @[GPIOPeripheral.scala 247:38]
+    end else if (3'h0 == write_state_reg) begin // @[GPIOPeripheral.scala 249:30]
+      n_shift_write <= 4'h0; // @[GPIOPeripheral.scala 252:37]
+    end else if (!(3'h4 == write_state_reg)) begin // @[GPIOPeripheral.scala 249:30]
+      if (3'h2 == write_state_reg) begin // @[GPIOPeripheral.scala 249:30]
         n_shift_write <= _GEN_181;
       end
     end
@@ -2376,110 +2362,65 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module NativeMemory2Pipecon(
-  input  [31:0] io_pipe_address,
-  input         io_pipe_rd,
-  input         io_pipe_wr,
-  output [31:0] io_pipe_rdData,
-  input  [31:0] io_pipe_wrData,
-  input  [3:0]  io_pipe_wrMask,
-  output [8:0]  io_native_address,
-  output [31:0] io_native_wdata,
-  input  [31:0] io_native_rdata,
-  output        io_native_cs,
-  output [3:0]  io_native_wmask,
-  output        io_native_wen
-);
-  assign io_pipe_rdData = io_native_rdata; // @[NativeMemory2Pipecon.scala 27:18]
-  assign io_native_address = io_pipe_address[8:0]; // @[NativeMemory2Pipecon.scala 26:39]
-  assign io_native_wdata = io_pipe_wrData; // @[NativeMemory2Pipecon.scala 28:19]
-  assign io_native_cs = io_pipe_rd | io_pipe_wr; // @[NativeMemory2Pipecon.scala 14:27]
-  assign io_native_wmask = io_pipe_wrMask; // @[NativeMemory2Pipecon.scala 18:19]
-  assign io_native_wen = io_pipe_wr; // @[NativeMemory2Pipecon.scala 19:17]
-endmodule
 module TopLevel(
-  input         clock,
-  input         reset,
-  output [8:0]  io_mem_address,
-  output [31:0] io_mem_wdata,
-  input  [31:0] io_mem_rdata,
-  output        io_mem_cs,
-  output [3:0]  io_mem_wmask,
-  output        io_mem_wen
+  input   clock,
+  input   reset
 );
-  wire  interconnect__clock; // @[TopLevel.scala 27:28]
-  wire  interconnect__reset; // @[TopLevel.scala 27:28]
-  wire  interconnect__io_device_0_rd; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_device_0_rdData; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_device_0_wrData; // @[TopLevel.scala 27:28]
-  wire [3:0] interconnect__io_device_0_wrMask; // @[TopLevel.scala 27:28]
-  wire  interconnect__io_device_1_rd; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_device_1_rdData; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_device_1_wrData; // @[TopLevel.scala 27:28]
-  wire [3:0] interconnect__io_device_1_wrMask; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_device_2_address; // @[TopLevel.scala 27:28]
-  wire  interconnect__io_device_2_rd; // @[TopLevel.scala 27:28]
-  wire  interconnect__io_device_2_wr; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_device_2_rdData; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_device_2_wrData; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_device_3_address; // @[TopLevel.scala 27:28]
-  wire  interconnect__io_device_3_rd; // @[TopLevel.scala 27:28]
-  wire  interconnect__io_device_3_wr; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_device_3_rdData; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_device_3_wrData; // @[TopLevel.scala 27:28]
-  wire [3:0] interconnect__io_device_3_wrMask; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_dmem_rdAddress; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_dmem_rdData; // @[TopLevel.scala 27:28]
-  wire  interconnect__io_dmem_rdEnable; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_dmem_wrAddress; // @[TopLevel.scala 27:28]
-  wire [31:0] interconnect__io_dmem_wrData; // @[TopLevel.scala 27:28]
-  wire  interconnect__io_dmem_wrEnable_0; // @[TopLevel.scala 27:28]
-  wire  interconnect__io_dmem_wrEnable_1; // @[TopLevel.scala 27:28]
-  wire  interconnect__io_dmem_wrEnable_2; // @[TopLevel.scala 27:28]
-  wire  interconnect__io_dmem_wrEnable_3; // @[TopLevel.scala 27:28]
-  wire  cpu_clock; // @[TopLevel.scala 30:19]
-  wire  cpu_reset; // @[TopLevel.scala 30:19]
-  wire [31:0] cpu_io_dmem_rdAddress; // @[TopLevel.scala 30:19]
-  wire [31:0] cpu_io_dmem_rdData; // @[TopLevel.scala 30:19]
-  wire  cpu_io_dmem_rdEnable; // @[TopLevel.scala 30:19]
-  wire [31:0] cpu_io_dmem_wrAddress; // @[TopLevel.scala 30:19]
-  wire [31:0] cpu_io_dmem_wrData; // @[TopLevel.scala 30:19]
-  wire  cpu_io_dmem_wrEnable_0; // @[TopLevel.scala 30:19]
-  wire  cpu_io_dmem_wrEnable_1; // @[TopLevel.scala 30:19]
-  wire  cpu_io_dmem_wrEnable_2; // @[TopLevel.scala 30:19]
-  wire  cpu_io_dmem_wrEnable_3; // @[TopLevel.scala 30:19]
-  wire  UARTPeripheral_clock; // @[TopLevel.scala 34:30]
-  wire  UARTPeripheral_reset; // @[TopLevel.scala 34:30]
-  wire  UARTPeripheral_io_rd; // @[TopLevel.scala 34:30]
-  wire [31:0] UARTPeripheral_io_rdData; // @[TopLevel.scala 34:30]
-  wire [31:0] UARTPeripheral_io_wrData; // @[TopLevel.scala 34:30]
-  wire [3:0] UARTPeripheral_io_wrMask; // @[TopLevel.scala 34:30]
-  wire  SPIPeripheral_clock; // @[TopLevel.scala 35:29]
-  wire  SPIPeripheral_reset; // @[TopLevel.scala 35:29]
-  wire  SPIPeripheral_io_rd; // @[TopLevel.scala 35:29]
-  wire [31:0] SPIPeripheral_io_rdData; // @[TopLevel.scala 35:29]
-  wire [31:0] SPIPeripheral_io_wrData; // @[TopLevel.scala 35:29]
-  wire [3:0] SPIPeripheral_io_wrMask; // @[TopLevel.scala 35:29]
-  wire  GPIOPeripheral_clock; // @[TopLevel.scala 36:30]
-  wire  GPIOPeripheral_reset; // @[TopLevel.scala 36:30]
-  wire [31:0] GPIOPeripheral_io_mem_ifc_address; // @[TopLevel.scala 36:30]
-  wire  GPIOPeripheral_io_mem_ifc_rd; // @[TopLevel.scala 36:30]
-  wire  GPIOPeripheral_io_mem_ifc_wr; // @[TopLevel.scala 36:30]
-  wire [31:0] GPIOPeripheral_io_mem_ifc_rdData; // @[TopLevel.scala 36:30]
-  wire [31:0] GPIOPeripheral_io_mem_ifc_wrData; // @[TopLevel.scala 36:30]
-  wire [31:0] NativeMemory2Pipecon_io_pipe_address; // @[TopLevel.scala 37:36]
-  wire  NativeMemory2Pipecon_io_pipe_rd; // @[TopLevel.scala 37:36]
-  wire  NativeMemory2Pipecon_io_pipe_wr; // @[TopLevel.scala 37:36]
-  wire [31:0] NativeMemory2Pipecon_io_pipe_rdData; // @[TopLevel.scala 37:36]
-  wire [31:0] NativeMemory2Pipecon_io_pipe_wrData; // @[TopLevel.scala 37:36]
-  wire [3:0] NativeMemory2Pipecon_io_pipe_wrMask; // @[TopLevel.scala 37:36]
-  wire [8:0] NativeMemory2Pipecon_io_native_address; // @[TopLevel.scala 37:36]
-  wire [31:0] NativeMemory2Pipecon_io_native_wdata; // @[TopLevel.scala 37:36]
-  wire [31:0] NativeMemory2Pipecon_io_native_rdata; // @[TopLevel.scala 37:36]
-  wire  NativeMemory2Pipecon_io_native_cs; // @[TopLevel.scala 37:36]
-  wire [3:0] NativeMemory2Pipecon_io_native_wmask; // @[TopLevel.scala 37:36]
-  wire  NativeMemory2Pipecon_io_native_wen; // @[TopLevel.scala 37:36]
-  PipeConInterconnect interconnect_ ( // @[TopLevel.scala 27:28]
+  wire  interconnect__clock; // @[TopLevel.scala 26:28]
+  wire  interconnect__reset; // @[TopLevel.scala 26:28]
+  wire  interconnect__io_device_0_rd; // @[TopLevel.scala 26:28]
+  wire [31:0] interconnect__io_device_0_rdData; // @[TopLevel.scala 26:28]
+  wire [31:0] interconnect__io_device_0_wrData; // @[TopLevel.scala 26:28]
+  wire [3:0] interconnect__io_device_0_wrMask; // @[TopLevel.scala 26:28]
+  wire  interconnect__io_device_1_rd; // @[TopLevel.scala 26:28]
+  wire [31:0] interconnect__io_device_1_rdData; // @[TopLevel.scala 26:28]
+  wire [31:0] interconnect__io_device_1_wrData; // @[TopLevel.scala 26:28]
+  wire [3:0] interconnect__io_device_1_wrMask; // @[TopLevel.scala 26:28]
+  wire [31:0] interconnect__io_device_2_address; // @[TopLevel.scala 26:28]
+  wire  interconnect__io_device_2_rd; // @[TopLevel.scala 26:28]
+  wire  interconnect__io_device_2_wr; // @[TopLevel.scala 26:28]
+  wire [31:0] interconnect__io_device_2_rdData; // @[TopLevel.scala 26:28]
+  wire [31:0] interconnect__io_device_2_wrData; // @[TopLevel.scala 26:28]
+  wire [31:0] interconnect__io_dmem_rdAddress; // @[TopLevel.scala 26:28]
+  wire [31:0] interconnect__io_dmem_rdData; // @[TopLevel.scala 26:28]
+  wire  interconnect__io_dmem_rdEnable; // @[TopLevel.scala 26:28]
+  wire [31:0] interconnect__io_dmem_wrAddress; // @[TopLevel.scala 26:28]
+  wire [31:0] interconnect__io_dmem_wrData; // @[TopLevel.scala 26:28]
+  wire  interconnect__io_dmem_wrEnable_0; // @[TopLevel.scala 26:28]
+  wire  interconnect__io_dmem_wrEnable_1; // @[TopLevel.scala 26:28]
+  wire  interconnect__io_dmem_wrEnable_2; // @[TopLevel.scala 26:28]
+  wire  interconnect__io_dmem_wrEnable_3; // @[TopLevel.scala 26:28]
+  wire  cpu_clock; // @[TopLevel.scala 29:19]
+  wire  cpu_reset; // @[TopLevel.scala 29:19]
+  wire [31:0] cpu_io_dmem_rdAddress; // @[TopLevel.scala 29:19]
+  wire [31:0] cpu_io_dmem_rdData; // @[TopLevel.scala 29:19]
+  wire  cpu_io_dmem_rdEnable; // @[TopLevel.scala 29:19]
+  wire [31:0] cpu_io_dmem_wrAddress; // @[TopLevel.scala 29:19]
+  wire [31:0] cpu_io_dmem_wrData; // @[TopLevel.scala 29:19]
+  wire  cpu_io_dmem_wrEnable_0; // @[TopLevel.scala 29:19]
+  wire  cpu_io_dmem_wrEnable_1; // @[TopLevel.scala 29:19]
+  wire  cpu_io_dmem_wrEnable_2; // @[TopLevel.scala 29:19]
+  wire  cpu_io_dmem_wrEnable_3; // @[TopLevel.scala 29:19]
+  wire  UARTPeripheral_clock; // @[TopLevel.scala 33:30]
+  wire  UARTPeripheral_reset; // @[TopLevel.scala 33:30]
+  wire  UARTPeripheral_io_rd; // @[TopLevel.scala 33:30]
+  wire [31:0] UARTPeripheral_io_rdData; // @[TopLevel.scala 33:30]
+  wire [31:0] UARTPeripheral_io_wrData; // @[TopLevel.scala 33:30]
+  wire [3:0] UARTPeripheral_io_wrMask; // @[TopLevel.scala 33:30]
+  wire  SPIPeripheral_clock; // @[TopLevel.scala 34:29]
+  wire  SPIPeripheral_reset; // @[TopLevel.scala 34:29]
+  wire  SPIPeripheral_io_rd; // @[TopLevel.scala 34:29]
+  wire [31:0] SPIPeripheral_io_rdData; // @[TopLevel.scala 34:29]
+  wire [31:0] SPIPeripheral_io_wrData; // @[TopLevel.scala 34:29]
+  wire [3:0] SPIPeripheral_io_wrMask; // @[TopLevel.scala 34:29]
+  wire  GPIOPeripheral_clock; // @[TopLevel.scala 35:30]
+  wire  GPIOPeripheral_reset; // @[TopLevel.scala 35:30]
+  wire [31:0] GPIOPeripheral_io_mem_ifc_address; // @[TopLevel.scala 35:30]
+  wire  GPIOPeripheral_io_mem_ifc_rd; // @[TopLevel.scala 35:30]
+  wire  GPIOPeripheral_io_mem_ifc_wr; // @[TopLevel.scala 35:30]
+  wire [31:0] GPIOPeripheral_io_mem_ifc_rdData; // @[TopLevel.scala 35:30]
+  wire [31:0] GPIOPeripheral_io_mem_ifc_wrData; // @[TopLevel.scala 35:30]
+  PipeConInterconnect interconnect_ ( // @[TopLevel.scala 26:28]
     .clock(interconnect__clock),
     .reset(interconnect__reset),
     .io_device_0_rd(interconnect__io_device_0_rd),
@@ -2495,12 +2436,6 @@ module TopLevel(
     .io_device_2_wr(interconnect__io_device_2_wr),
     .io_device_2_rdData(interconnect__io_device_2_rdData),
     .io_device_2_wrData(interconnect__io_device_2_wrData),
-    .io_device_3_address(interconnect__io_device_3_address),
-    .io_device_3_rd(interconnect__io_device_3_rd),
-    .io_device_3_wr(interconnect__io_device_3_wr),
-    .io_device_3_rdData(interconnect__io_device_3_rdData),
-    .io_device_3_wrData(interconnect__io_device_3_wrData),
-    .io_device_3_wrMask(interconnect__io_device_3_wrMask),
     .io_dmem_rdAddress(interconnect__io_dmem_rdAddress),
     .io_dmem_rdData(interconnect__io_dmem_rdData),
     .io_dmem_rdEnable(interconnect__io_dmem_rdEnable),
@@ -2511,7 +2446,7 @@ module TopLevel(
     .io_dmem_wrEnable_2(interconnect__io_dmem_wrEnable_2),
     .io_dmem_wrEnable_3(interconnect__io_dmem_wrEnable_3)
   );
-  ThreeCats cpu ( // @[TopLevel.scala 30:19]
+  ThreeCats cpu ( // @[TopLevel.scala 29:19]
     .clock(cpu_clock),
     .reset(cpu_reset),
     .io_dmem_rdAddress(cpu_io_dmem_rdAddress),
@@ -2524,7 +2459,7 @@ module TopLevel(
     .io_dmem_wrEnable_2(cpu_io_dmem_wrEnable_2),
     .io_dmem_wrEnable_3(cpu_io_dmem_wrEnable_3)
   );
-  UARTPeripheral UARTPeripheral ( // @[TopLevel.scala 34:30]
+  UARTPeripheral UARTPeripheral ( // @[TopLevel.scala 33:30]
     .clock(UARTPeripheral_clock),
     .reset(UARTPeripheral_reset),
     .io_rd(UARTPeripheral_io_rd),
@@ -2532,7 +2467,7 @@ module TopLevel(
     .io_wrData(UARTPeripheral_io_wrData),
     .io_wrMask(UARTPeripheral_io_wrMask)
   );
-  SPIPeripheral SPIPeripheral ( // @[TopLevel.scala 35:29]
+  SPIPeripheral SPIPeripheral ( // @[TopLevel.scala 34:29]
     .clock(SPIPeripheral_clock),
     .reset(SPIPeripheral_reset),
     .io_rd(SPIPeripheral_io_rd),
@@ -2540,7 +2475,7 @@ module TopLevel(
     .io_wrData(SPIPeripheral_io_wrData),
     .io_wrMask(SPIPeripheral_io_wrMask)
   );
-  GPIOPeripheral GPIOPeripheral ( // @[TopLevel.scala 36:30]
+  GPIOPeripheral GPIOPeripheral ( // @[TopLevel.scala 35:30]
     .clock(GPIOPeripheral_clock),
     .reset(GPIOPeripheral_reset),
     .io_mem_ifc_address(GPIOPeripheral_io_mem_ifc_address),
@@ -2549,122 +2484,71 @@ module TopLevel(
     .io_mem_ifc_rdData(GPIOPeripheral_io_mem_ifc_rdData),
     .io_mem_ifc_wrData(GPIOPeripheral_io_mem_ifc_wrData)
   );
-  NativeMemory2Pipecon NativeMemory2Pipecon ( // @[TopLevel.scala 37:36]
-    .io_pipe_address(NativeMemory2Pipecon_io_pipe_address),
-    .io_pipe_rd(NativeMemory2Pipecon_io_pipe_rd),
-    .io_pipe_wr(NativeMemory2Pipecon_io_pipe_wr),
-    .io_pipe_rdData(NativeMemory2Pipecon_io_pipe_rdData),
-    .io_pipe_wrData(NativeMemory2Pipecon_io_pipe_wrData),
-    .io_pipe_wrMask(NativeMemory2Pipecon_io_pipe_wrMask),
-    .io_native_address(NativeMemory2Pipecon_io_native_address),
-    .io_native_wdata(NativeMemory2Pipecon_io_native_wdata),
-    .io_native_rdata(NativeMemory2Pipecon_io_native_rdata),
-    .io_native_cs(NativeMemory2Pipecon_io_native_cs),
-    .io_native_wmask(NativeMemory2Pipecon_io_native_wmask),
-    .io_native_wen(NativeMemory2Pipecon_io_native_wen)
-  );
-  assign io_mem_address = NativeMemory2Pipecon_io_native_address; // @[TopLevel.scala 63:34]
-  assign io_mem_wdata = NativeMemory2Pipecon_io_native_wdata; // @[TopLevel.scala 63:34]
-  assign io_mem_cs = NativeMemory2Pipecon_io_native_cs; // @[TopLevel.scala 63:34]
-  assign io_mem_wmask = NativeMemory2Pipecon_io_native_wmask; // @[TopLevel.scala 63:34]
-  assign io_mem_wen = NativeMemory2Pipecon_io_native_wen; // @[TopLevel.scala 63:34]
   assign interconnect__clock = clock;
   assign interconnect__reset = reset;
-  assign interconnect__io_device_0_rdData = UARTPeripheral_io_rdData; // @[TopLevel.scala 39:21]
-  assign interconnect__io_device_1_rdData = SPIPeripheral_io_rdData; // @[TopLevel.scala 40:20]
-  assign interconnect__io_device_2_rdData = GPIOPeripheral_io_mem_ifc_rdData; // @[TopLevel.scala 41:29]
-  assign interconnect__io_device_3_rdData = NativeMemory2Pipecon_io_pipe_rdData; // @[TopLevel.scala 42:32]
-  assign interconnect__io_dmem_rdAddress = cpu_io_dmem_rdAddress; // @[TopLevel.scala 75:15]
-  assign interconnect__io_dmem_rdEnable = cpu_io_dmem_rdEnable; // @[TopLevel.scala 75:15]
-  assign interconnect__io_dmem_wrAddress = cpu_io_dmem_wrAddress; // @[TopLevel.scala 75:15]
-  assign interconnect__io_dmem_wrData = cpu_io_dmem_wrData; // @[TopLevel.scala 75:15]
-  assign interconnect__io_dmem_wrEnable_0 = cpu_io_dmem_wrEnable_0; // @[TopLevel.scala 75:15]
-  assign interconnect__io_dmem_wrEnable_1 = cpu_io_dmem_wrEnable_1; // @[TopLevel.scala 75:15]
-  assign interconnect__io_dmem_wrEnable_2 = cpu_io_dmem_wrEnable_2; // @[TopLevel.scala 75:15]
-  assign interconnect__io_dmem_wrEnable_3 = cpu_io_dmem_wrEnable_3; // @[TopLevel.scala 75:15]
+  assign interconnect__io_device_0_rdData = UARTPeripheral_io_rdData; // @[TopLevel.scala 38:21]
+  assign interconnect__io_device_1_rdData = SPIPeripheral_io_rdData; // @[TopLevel.scala 39:20]
+  assign interconnect__io_device_2_rdData = GPIOPeripheral_io_mem_ifc_rdData; // @[TopLevel.scala 40:29]
+  assign interconnect__io_dmem_rdAddress = cpu_io_dmem_rdAddress; // @[TopLevel.scala 74:15]
+  assign interconnect__io_dmem_rdEnable = cpu_io_dmem_rdEnable; // @[TopLevel.scala 74:15]
+  assign interconnect__io_dmem_wrAddress = cpu_io_dmem_wrAddress; // @[TopLevel.scala 74:15]
+  assign interconnect__io_dmem_wrData = cpu_io_dmem_wrData; // @[TopLevel.scala 74:15]
+  assign interconnect__io_dmem_wrEnable_0 = cpu_io_dmem_wrEnable_0; // @[TopLevel.scala 74:15]
+  assign interconnect__io_dmem_wrEnable_1 = cpu_io_dmem_wrEnable_1; // @[TopLevel.scala 74:15]
+  assign interconnect__io_dmem_wrEnable_2 = cpu_io_dmem_wrEnable_2; // @[TopLevel.scala 74:15]
+  assign interconnect__io_dmem_wrEnable_3 = cpu_io_dmem_wrEnable_3; // @[TopLevel.scala 74:15]
   assign cpu_clock = clock;
   assign cpu_reset = reset;
-  assign cpu_io_dmem_rdData = interconnect__io_dmem_rdData; // @[TopLevel.scala 75:15]
+  assign cpu_io_dmem_rdData = interconnect__io_dmem_rdData; // @[TopLevel.scala 74:15]
   assign UARTPeripheral_clock = clock;
   assign UARTPeripheral_reset = reset;
-  assign UARTPeripheral_io_rd = interconnect__io_device_0_rd; // @[TopLevel.scala 39:21]
-  assign UARTPeripheral_io_wrData = interconnect__io_device_0_wrData; // @[TopLevel.scala 39:21]
-  assign UARTPeripheral_io_wrMask = interconnect__io_device_0_wrMask; // @[TopLevel.scala 39:21]
+  assign UARTPeripheral_io_rd = interconnect__io_device_0_rd; // @[TopLevel.scala 38:21]
+  assign UARTPeripheral_io_wrData = interconnect__io_device_0_wrData; // @[TopLevel.scala 38:21]
+  assign UARTPeripheral_io_wrMask = interconnect__io_device_0_wrMask; // @[TopLevel.scala 38:21]
   assign SPIPeripheral_clock = clock;
   assign SPIPeripheral_reset = reset;
-  assign SPIPeripheral_io_rd = interconnect__io_device_1_rd; // @[TopLevel.scala 40:20]
-  assign SPIPeripheral_io_wrData = interconnect__io_device_1_wrData; // @[TopLevel.scala 40:20]
-  assign SPIPeripheral_io_wrMask = interconnect__io_device_1_wrMask; // @[TopLevel.scala 40:20]
+  assign SPIPeripheral_io_rd = interconnect__io_device_1_rd; // @[TopLevel.scala 39:20]
+  assign SPIPeripheral_io_wrData = interconnect__io_device_1_wrData; // @[TopLevel.scala 39:20]
+  assign SPIPeripheral_io_wrMask = interconnect__io_device_1_wrMask; // @[TopLevel.scala 39:20]
   assign GPIOPeripheral_clock = clock;
   assign GPIOPeripheral_reset = reset;
-  assign GPIOPeripheral_io_mem_ifc_address = interconnect__io_device_2_address; // @[TopLevel.scala 41:29]
-  assign GPIOPeripheral_io_mem_ifc_rd = interconnect__io_device_2_rd; // @[TopLevel.scala 41:29]
-  assign GPIOPeripheral_io_mem_ifc_wr = interconnect__io_device_2_wr; // @[TopLevel.scala 41:29]
-  assign GPIOPeripheral_io_mem_ifc_wrData = interconnect__io_device_2_wrData; // @[TopLevel.scala 41:29]
-  assign NativeMemory2Pipecon_io_pipe_address = interconnect__io_device_3_address; // @[TopLevel.scala 42:32]
-  assign NativeMemory2Pipecon_io_pipe_rd = interconnect__io_device_3_rd; // @[TopLevel.scala 42:32]
-  assign NativeMemory2Pipecon_io_pipe_wr = interconnect__io_device_3_wr; // @[TopLevel.scala 42:32]
-  assign NativeMemory2Pipecon_io_pipe_wrData = interconnect__io_device_3_wrData; // @[TopLevel.scala 42:32]
-  assign NativeMemory2Pipecon_io_pipe_wrMask = interconnect__io_device_3_wrMask; // @[TopLevel.scala 42:32]
-  assign NativeMemory2Pipecon_io_native_rdata = io_mem_rdata; // @[TopLevel.scala 63:34]
+  assign GPIOPeripheral_io_mem_ifc_address = interconnect__io_device_2_address; // @[TopLevel.scala 40:29]
+  assign GPIOPeripheral_io_mem_ifc_rd = interconnect__io_device_2_rd; // @[TopLevel.scala 40:29]
+  assign GPIOPeripheral_io_mem_ifc_wr = interconnect__io_device_2_wr; // @[TopLevel.scala 40:29]
+  assign GPIOPeripheral_io_mem_ifc_wrData = interconnect__io_device_2_wrData; // @[TopLevel.scala 40:29]
 endmodule
 module CaravelTopLevel(
-  input          io_caravel_wb_clk_i,
-  input          io_caravel_wb_rst_i,
-  input          io_caravel_wbs_stb_i,
-  input          io_caravel_wbs_cyc_i,
-  input          io_caravel_wbs_we_i,
-  input  [3:0]   io_caravel_wbs_sel_i,
-  input  [31:0]  io_caravel_wbs_dat_i,
-  input  [31:0]  io_caravel_wbs_adr_i,
-  output         io_caravel_wbs_ack_o,
-  output [31:0]  io_caravel_wbs_dat_o,
-  input  [127:0] io_caravel_la_data_in,
-  output [127:0] io_caravel_la_data_out,
-  input  [127:0] io_caravel_la_oenb,
-  input  [37:0]  io_caravel_io_in,
-  output [37:0]  io_caravel_io_out,
-  output [37:0]  io_caravel_io_oeb,
-  input          io_caravel_user_clock2,
-  output [2:0]   io_caravel_user_irq,
-  output [8:0]   io_mem_address,
-  output [31:0]  io_mem_wdata,
-  input  [31:0]  io_mem_rdata,
-  output         io_mem_cs,
-  output [3:0]   io_mem_wmask,
-  output         io_mem_wen
+  input          io_wb_clk_i,
+  input          io_wb_rst_i,
+  input          io_wbs_stb_i,
+  input          io_wbs_cyc_i,
+  input          io_wbs_we_i,
+  input  [3:0]   io_wbs_sel_i,
+  input  [31:0]  io_wbs_dat_i,
+  input  [31:0]  io_wbs_adr_i,
+  output         io_wbs_ack_o,
+  output [31:0]  io_wbs_dat_o,
+  input  [127:0] io_la_data_in,
+  output [127:0] io_la_data_out,
+  input  [127:0] io_la_oenb,
+  input  [37:0]  io_io_in,
+  output [37:0]  io_io_out,
+  output [37:0]  io_io_oeb,
+  input          io_user_clock2,
+  output [2:0]   io_user_irq
 );
-  wire  topLevel_clock; // @[CaravelTopLevel.scala 143:26]
-  wire  topLevel_reset; // @[CaravelTopLevel.scala 143:26]
-  wire [8:0] topLevel_io_mem_address; // @[CaravelTopLevel.scala 143:26]
-  wire [31:0] topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 143:26]
-  wire [31:0] topLevel_io_mem_rdata; // @[CaravelTopLevel.scala 143:26]
-  wire  topLevel_io_mem_cs; // @[CaravelTopLevel.scala 143:26]
-  wire [3:0] topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 143:26]
-  wire  topLevel_io_mem_wen; // @[CaravelTopLevel.scala 143:26]
-  wire  _io_caravel_la_data_out_T = ~io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 156:31]
-  TopLevel topLevel ( // @[CaravelTopLevel.scala 143:26]
+  wire  topLevel_clock; // @[CaravelTopLevel.scala 140:26]
+  wire  topLevel_reset; // @[CaravelTopLevel.scala 140:26]
+  TopLevel topLevel ( // @[CaravelTopLevel.scala 140:26]
     .clock(topLevel_clock),
-    .reset(topLevel_reset),
-    .io_mem_address(topLevel_io_mem_address),
-    .io_mem_wdata(topLevel_io_mem_wdata),
-    .io_mem_rdata(topLevel_io_mem_rdata),
-    .io_mem_cs(topLevel_io_mem_cs),
-    .io_mem_wmask(topLevel_io_mem_wmask),
-    .io_mem_wen(topLevel_io_mem_wen)
+    .reset(topLevel_reset)
   );
-  assign io_caravel_wbs_ack_o = 1'h0; // @[CaravelTopLevel.scala 136:24]
-  assign io_caravel_wbs_dat_o = 32'h0; // @[CaravelTopLevel.scala 137:24]
-  assign io_caravel_la_data_out = {{127'd0}, _io_caravel_la_data_out_T}; // @[CaravelTopLevel.scala 156:28]
-  assign io_caravel_io_out = 38'h0; // @[Cat.scala 33:92]
-  assign io_caravel_io_oeb = 38'h0; // @[Cat.scala 33:92]
-  assign io_caravel_user_irq = 3'h0;
-  assign io_mem_address = topLevel_io_mem_address; // @[CaravelTopLevel.scala 146:21]
-  assign io_mem_wdata = topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 146:21]
-  assign io_mem_cs = topLevel_io_mem_cs; // @[CaravelTopLevel.scala 146:21]
-  assign io_mem_wmask = topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 146:21]
-  assign io_mem_wen = topLevel_io_mem_wen; // @[CaravelTopLevel.scala 146:21]
-  assign topLevel_clock = io_caravel_wb_clk_i; // @[CaravelTopLevel.scala 113:25 119:7]
-  assign topLevel_reset = io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 114:25 125:7]
-  assign topLevel_io_mem_rdata = io_mem_rdata; // @[CaravelTopLevel.scala 146:21]
+  assign io_wbs_ack_o = 1'h0; // @[CaravelTopLevel.scala 133:16]
+  assign io_wbs_dat_o = 32'h0; // @[CaravelTopLevel.scala 134:16]
+  assign io_la_data_out = 128'h0;
+  assign io_io_out = 38'h0; // @[Cat.scala 33:92]
+  assign io_io_oeb = 38'h0; // @[Cat.scala 33:92]
+  assign io_user_irq = 3'h0;
+  assign topLevel_clock = io_wb_clk_i; // @[CaravelTopLevel.scala 110:25 116:7]
+  assign topLevel_reset = io_wb_rst_i; // @[CaravelTopLevel.scala 111:25 122:7]
 endmodule
