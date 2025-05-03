@@ -996,84 +996,6 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module GpioPadTop(
-  input   io_OUT,
-  input   io_OE_N,
-  output  io_IN
-);
-  wire  gpioPad_OUT; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_OE_N; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_HLD_H_N; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_ENABLE_H; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_ENABLE_INP_H; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_ENABLE_VDDA_H; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_ENABLE_VSWITCH_H; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_ENABLE_VDDIO; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_INP_DIS; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_IB_MODE_SEL; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_VTRIP_SEL; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_SLOW; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_HLD_OVR; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_ANALOG_EN; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_ANALOG_SEL; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_ANALOG_POL; // @[GpioPadTop.scala 32:37]
-  wire [2:0] gpioPad_DM; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_PAD; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_PAD_A_NOESD_H; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_PAD_A_ESD_0_H; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_PAD_A_ESD_1_H; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_AMUXBUS_A; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_AMUXBUS_B; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_IN; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_IN_H; // @[GpioPadTop.scala 32:37]
-  wire  gpioPad_TIE_HI_ESD; // @[GpioPadTop.scala 32:37]
-  sky130_fd_io__top_gpiov2 gpioPad ( // @[GpioPadTop.scala 32:37]
-    .OUT(gpioPad_OUT),
-    .OE_N(gpioPad_OE_N),
-    .HLD_H_N(gpioPad_HLD_H_N),
-    .ENABLE_H(gpioPad_ENABLE_H),
-    .ENABLE_INP_H(gpioPad_ENABLE_INP_H),
-    .ENABLE_VDDA_H(gpioPad_ENABLE_VDDA_H),
-    .ENABLE_VSWITCH_H(gpioPad_ENABLE_VSWITCH_H),
-    .ENABLE_VDDIO(gpioPad_ENABLE_VDDIO),
-    .INP_DIS(gpioPad_INP_DIS),
-    .IB_MODE_SEL(gpioPad_IB_MODE_SEL),
-    .VTRIP_SEL(gpioPad_VTRIP_SEL),
-    .SLOW(gpioPad_SLOW),
-    .HLD_OVR(gpioPad_HLD_OVR),
-    .ANALOG_EN(gpioPad_ANALOG_EN),
-    .ANALOG_SEL(gpioPad_ANALOG_SEL),
-    .ANALOG_POL(gpioPad_ANALOG_POL),
-    .DM(gpioPad_DM),
-    .PAD(gpioPad_PAD),
-    .PAD_A_NOESD_H(gpioPad_PAD_A_NOESD_H),
-    .PAD_A_ESD_0_H(gpioPad_PAD_A_ESD_0_H),
-    .PAD_A_ESD_1_H(gpioPad_PAD_A_ESD_1_H),
-    .AMUXBUS_A(gpioPad_AMUXBUS_A),
-    .AMUXBUS_B(gpioPad_AMUXBUS_B),
-    .IN(gpioPad_IN),
-    .IN_H(gpioPad_IN_H),
-    .TIE_HI_ESD(gpioPad_TIE_HI_ESD)
-  );
-  assign io_IN = gpioPad_IN; // @[GpioPadTop.scala 37:37]
-  assign gpioPad_OUT = io_OUT; // @[GpioPadTop.scala 35:37]
-  assign gpioPad_OE_N = io_OE_N; // @[GpioPadTop.scala 36:37]
-  assign gpioPad_HLD_H_N = 1'h1; // @[GpioPadTop.scala 68:37]
-  assign gpioPad_ENABLE_H = 1'h1; // @[GpioPadTop.scala 56:37]
-  assign gpioPad_ENABLE_INP_H = 1'h1; // @[GpioPadTop.scala 50:37]
-  assign gpioPad_ENABLE_VDDA_H = 1'h1; // @[GpioPadTop.scala 71:37]
-  assign gpioPad_ENABLE_VSWITCH_H = 1'h1; // @[GpioPadTop.scala 53:37]
-  assign gpioPad_ENABLE_VDDIO = 1'h1; // @[GpioPadTop.scala 61:37]
-  assign gpioPad_INP_DIS = 1'h0; // @[GpioPadTop.scala 57:37]
-  assign gpioPad_IB_MODE_SEL = 1'h0; // @[GpioPadTop.scala 60:37]
-  assign gpioPad_VTRIP_SEL = 1'h0; // @[GpioPadTop.scala 64:37]
-  assign gpioPad_SLOW = 1'h0; // @[GpioPadTop.scala 79:37]
-  assign gpioPad_HLD_OVR = 1'h1; // @[GpioPadTop.scala 67:37]
-  assign gpioPad_ANALOG_EN = 1'h0; // @[GpioPadTop.scala 72:37]
-  assign gpioPad_ANALOG_SEL = 1'h0; // @[GpioPadTop.scala 73:37]
-  assign gpioPad_ANALOG_POL = 1'h0; // @[GpioPadTop.scala 74:37]
-  assign gpioPad_DM = 3'h3; // @[GpioPadTop.scala 77:37]
-endmodule
 module Prescaler(
   input        clock,
   input        reset,
@@ -1282,6 +1204,84 @@ module PWMTop(
   assign pwmGenerator_io_pwm_polarity = io_pwm_polarity; // @[PWMTop.scala 26:34]
   assign pwmGenerator_io_pwm_en = io_pwm_en; // @[PWMTop.scala 24:28]
 endmodule
+module GpioPadTop(
+  input   io_OUT,
+  input   io_OE_N,
+  output  io_IN
+);
+  wire  gpioPad_OUT; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_OE_N; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_HLD_H_N; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_ENABLE_H; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_ENABLE_INP_H; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_ENABLE_VDDA_H; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_ENABLE_VSWITCH_H; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_ENABLE_VDDIO; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_INP_DIS; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_IB_MODE_SEL; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_VTRIP_SEL; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_SLOW; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_HLD_OVR; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_ANALOG_EN; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_ANALOG_SEL; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_ANALOG_POL; // @[GpioPadTop.scala 32:37]
+  wire [2:0] gpioPad_DM; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_PAD; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_PAD_A_NOESD_H; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_PAD_A_ESD_0_H; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_PAD_A_ESD_1_H; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_AMUXBUS_A; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_AMUXBUS_B; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_IN; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_IN_H; // @[GpioPadTop.scala 32:37]
+  wire  gpioPad_TIE_HI_ESD; // @[GpioPadTop.scala 32:37]
+  sky130_fd_io__top_gpiov2 gpioPad ( // @[GpioPadTop.scala 32:37]
+    .OUT(gpioPad_OUT),
+    .OE_N(gpioPad_OE_N),
+    .HLD_H_N(gpioPad_HLD_H_N),
+    .ENABLE_H(gpioPad_ENABLE_H),
+    .ENABLE_INP_H(gpioPad_ENABLE_INP_H),
+    .ENABLE_VDDA_H(gpioPad_ENABLE_VDDA_H),
+    .ENABLE_VSWITCH_H(gpioPad_ENABLE_VSWITCH_H),
+    .ENABLE_VDDIO(gpioPad_ENABLE_VDDIO),
+    .INP_DIS(gpioPad_INP_DIS),
+    .IB_MODE_SEL(gpioPad_IB_MODE_SEL),
+    .VTRIP_SEL(gpioPad_VTRIP_SEL),
+    .SLOW(gpioPad_SLOW),
+    .HLD_OVR(gpioPad_HLD_OVR),
+    .ANALOG_EN(gpioPad_ANALOG_EN),
+    .ANALOG_SEL(gpioPad_ANALOG_SEL),
+    .ANALOG_POL(gpioPad_ANALOG_POL),
+    .DM(gpioPad_DM),
+    .PAD(gpioPad_PAD),
+    .PAD_A_NOESD_H(gpioPad_PAD_A_NOESD_H),
+    .PAD_A_ESD_0_H(gpioPad_PAD_A_ESD_0_H),
+    .PAD_A_ESD_1_H(gpioPad_PAD_A_ESD_1_H),
+    .AMUXBUS_A(gpioPad_AMUXBUS_A),
+    .AMUXBUS_B(gpioPad_AMUXBUS_B),
+    .IN(gpioPad_IN),
+    .IN_H(gpioPad_IN_H),
+    .TIE_HI_ESD(gpioPad_TIE_HI_ESD)
+  );
+  assign io_IN = gpioPad_IN; // @[GpioPadTop.scala 37:37]
+  assign gpioPad_OUT = io_OUT; // @[GpioPadTop.scala 35:37]
+  assign gpioPad_OE_N = io_OE_N; // @[GpioPadTop.scala 36:37]
+  assign gpioPad_HLD_H_N = 1'h1; // @[GpioPadTop.scala 68:37]
+  assign gpioPad_ENABLE_H = 1'h1; // @[GpioPadTop.scala 56:37]
+  assign gpioPad_ENABLE_INP_H = 1'h1; // @[GpioPadTop.scala 50:37]
+  assign gpioPad_ENABLE_VDDA_H = 1'h1; // @[GpioPadTop.scala 71:37]
+  assign gpioPad_ENABLE_VSWITCH_H = 1'h1; // @[GpioPadTop.scala 53:37]
+  assign gpioPad_ENABLE_VDDIO = 1'h1; // @[GpioPadTop.scala 61:37]
+  assign gpioPad_INP_DIS = 1'h0; // @[GpioPadTop.scala 57:37]
+  assign gpioPad_IB_MODE_SEL = 1'h0; // @[GpioPadTop.scala 60:37]
+  assign gpioPad_VTRIP_SEL = 1'h0; // @[GpioPadTop.scala 64:37]
+  assign gpioPad_SLOW = 1'h0; // @[GpioPadTop.scala 79:37]
+  assign gpioPad_HLD_OVR = 1'h1; // @[GpioPadTop.scala 67:37]
+  assign gpioPad_ANALOG_EN = 1'h0; // @[GpioPadTop.scala 72:37]
+  assign gpioPad_ANALOG_SEL = 1'h0; // @[GpioPadTop.scala 73:37]
+  assign gpioPad_ANALOG_POL = 1'h0; // @[GpioPadTop.scala 74:37]
+  assign gpioPad_DM = 3'h3; // @[GpioPadTop.scala 77:37]
+endmodule
 module GPIOModule(
   input        clock,
   input        reset,
@@ -1294,23 +1294,18 @@ module GPIOModule(
   input        io_pwm_polarity,
   input        io_pwm_en
 );
-  wire  gpioPadTop_io_OUT; // @[GPIOModule.scala 31:26]
-  wire  gpioPadTop_io_OE_N; // @[GPIOModule.scala 31:26]
-  wire  gpioPadTop_io_IN; // @[GPIOModule.scala 31:26]
-  wire  pwmTop_clock; // @[GPIOModule.scala 34:22]
-  wire  pwmTop_reset; // @[GPIOModule.scala 34:22]
-  wire [7:0] pwmTop_io_pwm_div; // @[GPIOModule.scala 34:22]
-  wire [7:0] pwmTop_io_duty_cycle; // @[GPIOModule.scala 34:22]
-  wire [7:0] pwmTop_io_pwm_period; // @[GPIOModule.scala 34:22]
-  wire  pwmTop_io_pwm_polarity; // @[GPIOModule.scala 34:22]
-  wire  pwmTop_io_pwm_en; // @[GPIOModule.scala 34:22]
-  wire  pwmTop_io_pwm_out; // @[GPIOModule.scala 34:22]
-  GpioPadTop gpioPadTop ( // @[GPIOModule.scala 31:26]
-    .io_OUT(gpioPadTop_io_OUT),
-    .io_OE_N(gpioPadTop_io_OE_N),
-    .io_IN(gpioPadTop_io_IN)
-  );
-  PWMTop pwmTop ( // @[GPIOModule.scala 34:22]
+  wire  pwmTop_clock; // @[GPIOModule.scala 38:22]
+  wire  pwmTop_reset; // @[GPIOModule.scala 38:22]
+  wire [7:0] pwmTop_io_pwm_div; // @[GPIOModule.scala 38:22]
+  wire [7:0] pwmTop_io_duty_cycle; // @[GPIOModule.scala 38:22]
+  wire [7:0] pwmTop_io_pwm_period; // @[GPIOModule.scala 38:22]
+  wire  pwmTop_io_pwm_polarity; // @[GPIOModule.scala 38:22]
+  wire  pwmTop_io_pwm_en; // @[GPIOModule.scala 38:22]
+  wire  pwmTop_io_pwm_out; // @[GPIOModule.scala 38:22]
+  wire  gpioPadTop_io_OUT; // @[GPIOModule.scala 61:28]
+  wire  gpioPadTop_io_OE_N; // @[GPIOModule.scala 61:28]
+  wire  gpioPadTop_io_IN; // @[GPIOModule.scala 61:28]
+  PWMTop pwmTop ( // @[GPIOModule.scala 38:22]
     .clock(pwmTop_clock),
     .reset(pwmTop_reset),
     .io_pwm_div(pwmTop_io_pwm_div),
@@ -1320,16 +1315,21 @@ module GPIOModule(
     .io_pwm_en(pwmTop_io_pwm_en),
     .io_pwm_out(pwmTop_io_pwm_out)
   );
-  assign io_gpio_input = gpioPadTop_io_IN; // @[GPIOModule.scala 43:17]
-  assign gpioPadTop_io_OUT = io_pwm_en ? pwmTop_io_pwm_out : io_gpio_output; // @[GPIOModule.scala 46:23]
-  assign gpioPadTop_io_OE_N = ~io_gpio_direction; // @[GPIOModule.scala 50:25]
+  GpioPadTop gpioPadTop ( // @[GPIOModule.scala 61:28]
+    .io_OUT(gpioPadTop_io_OUT),
+    .io_OE_N(gpioPadTop_io_OE_N),
+    .io_IN(gpioPadTop_io_IN)
+  );
+  assign io_gpio_input = gpioPadTop_io_IN; // @[GPIOModule.scala 64:19]
   assign pwmTop_clock = clock;
   assign pwmTop_reset = reset;
-  assign pwmTop_io_pwm_div = io_pwm_div; // @[GPIOModule.scala 35:21]
-  assign pwmTop_io_duty_cycle = io_duty_cycle; // @[GPIOModule.scala 36:24]
-  assign pwmTop_io_pwm_period = io_pwm_period; // @[GPIOModule.scala 37:24]
-  assign pwmTop_io_pwm_polarity = io_pwm_polarity; // @[GPIOModule.scala 38:26]
-  assign pwmTop_io_pwm_en = io_pwm_en; // @[GPIOModule.scala 39:20]
+  assign pwmTop_io_pwm_div = io_pwm_div; // @[GPIOModule.scala 39:21]
+  assign pwmTop_io_duty_cycle = io_duty_cycle; // @[GPIOModule.scala 40:24]
+  assign pwmTop_io_pwm_period = io_pwm_period; // @[GPIOModule.scala 41:24]
+  assign pwmTop_io_pwm_polarity = io_pwm_polarity; // @[GPIOModule.scala 42:26]
+  assign pwmTop_io_pwm_en = io_pwm_en; // @[GPIOModule.scala 43:20]
+  assign gpioPadTop_io_OUT = io_pwm_en ? pwmTop_io_pwm_out : io_gpio_output; // @[GPIOModule.scala 50:23]
+  assign gpioPadTop_io_OE_N = ~io_gpio_direction; // @[GPIOModule.scala 52:23]
 endmodule
 module GPIOPeripheral(
   input         clock,
