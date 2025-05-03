@@ -47,6 +47,12 @@ module PipeConInterconnect(
   output        io_device_2_wr,
   input  [31:0] io_device_2_rdData,
   output [31:0] io_device_2_wrData,
+  output [31:0] io_device_3_address,
+  output        io_device_3_rd,
+  output        io_device_3_wr,
+  input  [31:0] io_device_3_rdData,
+  output [31:0] io_device_3_wrData,
+  output [3:0]  io_device_3_wrMask,
   input  [31:0] io_dmem_rdAddress,
   output [31:0] io_dmem_rdData,
   input         io_dmem_rdEnable,
@@ -81,6 +87,14 @@ module PipeConInterconnect(
   assign io_device_2_rd = io_dmem_wrAddress >= 32'h20 & io_dmem_wrAddress <= 32'h2f & selected_rd; // @[PipeConInterconnect.scala 35:74 36:16 12:21]
   assign io_device_2_wr = io_dmem_wrAddress >= 32'h20 & io_dmem_wrAddress <= 32'h2f & selected_wr; // @[PipeConInterconnect.scala 35:74 36:16 13:21]
   assign io_device_2_wrData = io_dmem_wrAddress >= 32'h20 & io_dmem_wrAddress <= 32'h2f ? selected_wrData : 32'h0; // @[PipeConInterconnect.scala 35:74 36:16 15:25]
+  assign io_device_3_address = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff ? selected_address
+     : 32'h0; // @[PipeConInterconnect.scala 35:74 36:16 14:26]
+  assign io_device_3_rd = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff & selected_rd; // @[PipeConInterconnect.scala 35:74 36:16 12:21]
+  assign io_device_3_wr = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff & selected_wr; // @[PipeConInterconnect.scala 35:74 36:16 13:21]
+  assign io_device_3_wrData = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff ? selected_wrData : 32'h0
+    ; // @[PipeConInterconnect.scala 35:74 36:16 15:25]
+  assign io_device_3_wrMask = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff ? selected_wrMask : 4'h0
+    ; // @[PipeConInterconnect.scala 35:74 36:16 16:25]
   assign io_dmem_rdData = rdDataReg; // @[PipeConInterconnect.scala 55:18]
   always @(posedge clock) begin
     if (reset) begin // @[PipeConInterconnect.scala 19:26]
@@ -88,7 +102,7 @@ module PipeConInterconnect(
     end else if (!(selected_wr)) begin // @[PipeConInterconnect.scala 41:41]
       if (io_dmem_rdEnable) begin // @[PipeConInterconnect.scala 47:32]
         if (io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff) begin // @[PipeConInterconnect.scala 35:74]
-          rdDataReg <= 32'h0; // @[PipeConInterconnect.scala 36:16]
+          rdDataReg <= io_device_3_rdData; // @[PipeConInterconnect.scala 36:16]
         end else begin
           rdDataReg <= _GEN_17;
         end
@@ -2362,65 +2376,110 @@ end // initial
 `endif
 `endif // SYNTHESIS
 endmodule
-module TopLevel(
-  input   clock,
-  input   reset
+module NativeMemory2Pipecon(
+  input  [31:0] io_pipe_address,
+  input         io_pipe_rd,
+  input         io_pipe_wr,
+  output [31:0] io_pipe_rdData,
+  input  [31:0] io_pipe_wrData,
+  input  [3:0]  io_pipe_wrMask,
+  output [8:0]  io_native_address,
+  output [31:0] io_native_wdata,
+  input  [31:0] io_native_rdata,
+  output        io_native_cs,
+  output [3:0]  io_native_wmask,
+  output        io_native_wen
 );
-  wire  interconnect__clock; // @[TopLevel.scala 26:28]
-  wire  interconnect__reset; // @[TopLevel.scala 26:28]
-  wire  interconnect__io_device_0_rd; // @[TopLevel.scala 26:28]
-  wire [31:0] interconnect__io_device_0_rdData; // @[TopLevel.scala 26:28]
-  wire [31:0] interconnect__io_device_0_wrData; // @[TopLevel.scala 26:28]
-  wire [3:0] interconnect__io_device_0_wrMask; // @[TopLevel.scala 26:28]
-  wire  interconnect__io_device_1_rd; // @[TopLevel.scala 26:28]
-  wire [31:0] interconnect__io_device_1_rdData; // @[TopLevel.scala 26:28]
-  wire [31:0] interconnect__io_device_1_wrData; // @[TopLevel.scala 26:28]
-  wire [3:0] interconnect__io_device_1_wrMask; // @[TopLevel.scala 26:28]
-  wire [31:0] interconnect__io_device_2_address; // @[TopLevel.scala 26:28]
-  wire  interconnect__io_device_2_rd; // @[TopLevel.scala 26:28]
-  wire  interconnect__io_device_2_wr; // @[TopLevel.scala 26:28]
-  wire [31:0] interconnect__io_device_2_rdData; // @[TopLevel.scala 26:28]
-  wire [31:0] interconnect__io_device_2_wrData; // @[TopLevel.scala 26:28]
-  wire [31:0] interconnect__io_dmem_rdAddress; // @[TopLevel.scala 26:28]
-  wire [31:0] interconnect__io_dmem_rdData; // @[TopLevel.scala 26:28]
-  wire  interconnect__io_dmem_rdEnable; // @[TopLevel.scala 26:28]
-  wire [31:0] interconnect__io_dmem_wrAddress; // @[TopLevel.scala 26:28]
-  wire [31:0] interconnect__io_dmem_wrData; // @[TopLevel.scala 26:28]
-  wire  interconnect__io_dmem_wrEnable_0; // @[TopLevel.scala 26:28]
-  wire  interconnect__io_dmem_wrEnable_1; // @[TopLevel.scala 26:28]
-  wire  interconnect__io_dmem_wrEnable_2; // @[TopLevel.scala 26:28]
-  wire  interconnect__io_dmem_wrEnable_3; // @[TopLevel.scala 26:28]
-  wire  cpu_clock; // @[TopLevel.scala 29:19]
-  wire  cpu_reset; // @[TopLevel.scala 29:19]
-  wire [31:0] cpu_io_dmem_rdAddress; // @[TopLevel.scala 29:19]
-  wire [31:0] cpu_io_dmem_rdData; // @[TopLevel.scala 29:19]
-  wire  cpu_io_dmem_rdEnable; // @[TopLevel.scala 29:19]
-  wire [31:0] cpu_io_dmem_wrAddress; // @[TopLevel.scala 29:19]
-  wire [31:0] cpu_io_dmem_wrData; // @[TopLevel.scala 29:19]
-  wire  cpu_io_dmem_wrEnable_0; // @[TopLevel.scala 29:19]
-  wire  cpu_io_dmem_wrEnable_1; // @[TopLevel.scala 29:19]
-  wire  cpu_io_dmem_wrEnable_2; // @[TopLevel.scala 29:19]
-  wire  cpu_io_dmem_wrEnable_3; // @[TopLevel.scala 29:19]
-  wire  UARTPeripheral_clock; // @[TopLevel.scala 33:30]
-  wire  UARTPeripheral_reset; // @[TopLevel.scala 33:30]
-  wire  UARTPeripheral_io_rd; // @[TopLevel.scala 33:30]
-  wire [31:0] UARTPeripheral_io_rdData; // @[TopLevel.scala 33:30]
-  wire [31:0] UARTPeripheral_io_wrData; // @[TopLevel.scala 33:30]
-  wire [3:0] UARTPeripheral_io_wrMask; // @[TopLevel.scala 33:30]
-  wire  SPIPeripheral_clock; // @[TopLevel.scala 34:29]
-  wire  SPIPeripheral_reset; // @[TopLevel.scala 34:29]
-  wire  SPIPeripheral_io_rd; // @[TopLevel.scala 34:29]
-  wire [31:0] SPIPeripheral_io_rdData; // @[TopLevel.scala 34:29]
-  wire [31:0] SPIPeripheral_io_wrData; // @[TopLevel.scala 34:29]
-  wire [3:0] SPIPeripheral_io_wrMask; // @[TopLevel.scala 34:29]
-  wire  GPIOPeripheral_clock; // @[TopLevel.scala 35:30]
-  wire  GPIOPeripheral_reset; // @[TopLevel.scala 35:30]
-  wire [31:0] GPIOPeripheral_io_mem_ifc_address; // @[TopLevel.scala 35:30]
-  wire  GPIOPeripheral_io_mem_ifc_rd; // @[TopLevel.scala 35:30]
-  wire  GPIOPeripheral_io_mem_ifc_wr; // @[TopLevel.scala 35:30]
-  wire [31:0] GPIOPeripheral_io_mem_ifc_rdData; // @[TopLevel.scala 35:30]
-  wire [31:0] GPIOPeripheral_io_mem_ifc_wrData; // @[TopLevel.scala 35:30]
-  PipeConInterconnect interconnect_ ( // @[TopLevel.scala 26:28]
+  assign io_pipe_rdData = io_native_rdata; // @[NativeMemory2Pipecon.scala 27:18]
+  assign io_native_address = io_pipe_address[8:0]; // @[NativeMemory2Pipecon.scala 26:39]
+  assign io_native_wdata = io_pipe_wrData; // @[NativeMemory2Pipecon.scala 28:19]
+  assign io_native_cs = io_pipe_rd | io_pipe_wr; // @[NativeMemory2Pipecon.scala 14:27]
+  assign io_native_wmask = io_pipe_wrMask; // @[NativeMemory2Pipecon.scala 18:19]
+  assign io_native_wen = io_pipe_wr; // @[NativeMemory2Pipecon.scala 19:17]
+endmodule
+module TopLevel(
+  input         clock,
+  input         reset,
+  output [8:0]  io_mem_address,
+  output [31:0] io_mem_wdata,
+  input  [31:0] io_mem_rdata,
+  output        io_mem_cs,
+  output [3:0]  io_mem_wmask,
+  output        io_mem_wen
+);
+  wire  interconnect__clock; // @[TopLevel.scala 27:28]
+  wire  interconnect__reset; // @[TopLevel.scala 27:28]
+  wire  interconnect__io_device_0_rd; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_device_0_rdData; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_device_0_wrData; // @[TopLevel.scala 27:28]
+  wire [3:0] interconnect__io_device_0_wrMask; // @[TopLevel.scala 27:28]
+  wire  interconnect__io_device_1_rd; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_device_1_rdData; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_device_1_wrData; // @[TopLevel.scala 27:28]
+  wire [3:0] interconnect__io_device_1_wrMask; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_device_2_address; // @[TopLevel.scala 27:28]
+  wire  interconnect__io_device_2_rd; // @[TopLevel.scala 27:28]
+  wire  interconnect__io_device_2_wr; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_device_2_rdData; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_device_2_wrData; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_device_3_address; // @[TopLevel.scala 27:28]
+  wire  interconnect__io_device_3_rd; // @[TopLevel.scala 27:28]
+  wire  interconnect__io_device_3_wr; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_device_3_rdData; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_device_3_wrData; // @[TopLevel.scala 27:28]
+  wire [3:0] interconnect__io_device_3_wrMask; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_dmem_rdAddress; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_dmem_rdData; // @[TopLevel.scala 27:28]
+  wire  interconnect__io_dmem_rdEnable; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_dmem_wrAddress; // @[TopLevel.scala 27:28]
+  wire [31:0] interconnect__io_dmem_wrData; // @[TopLevel.scala 27:28]
+  wire  interconnect__io_dmem_wrEnable_0; // @[TopLevel.scala 27:28]
+  wire  interconnect__io_dmem_wrEnable_1; // @[TopLevel.scala 27:28]
+  wire  interconnect__io_dmem_wrEnable_2; // @[TopLevel.scala 27:28]
+  wire  interconnect__io_dmem_wrEnable_3; // @[TopLevel.scala 27:28]
+  wire  cpu_clock; // @[TopLevel.scala 30:19]
+  wire  cpu_reset; // @[TopLevel.scala 30:19]
+  wire [31:0] cpu_io_dmem_rdAddress; // @[TopLevel.scala 30:19]
+  wire [31:0] cpu_io_dmem_rdData; // @[TopLevel.scala 30:19]
+  wire  cpu_io_dmem_rdEnable; // @[TopLevel.scala 30:19]
+  wire [31:0] cpu_io_dmem_wrAddress; // @[TopLevel.scala 30:19]
+  wire [31:0] cpu_io_dmem_wrData; // @[TopLevel.scala 30:19]
+  wire  cpu_io_dmem_wrEnable_0; // @[TopLevel.scala 30:19]
+  wire  cpu_io_dmem_wrEnable_1; // @[TopLevel.scala 30:19]
+  wire  cpu_io_dmem_wrEnable_2; // @[TopLevel.scala 30:19]
+  wire  cpu_io_dmem_wrEnable_3; // @[TopLevel.scala 30:19]
+  wire  UARTPeripheral_clock; // @[TopLevel.scala 34:30]
+  wire  UARTPeripheral_reset; // @[TopLevel.scala 34:30]
+  wire  UARTPeripheral_io_rd; // @[TopLevel.scala 34:30]
+  wire [31:0] UARTPeripheral_io_rdData; // @[TopLevel.scala 34:30]
+  wire [31:0] UARTPeripheral_io_wrData; // @[TopLevel.scala 34:30]
+  wire [3:0] UARTPeripheral_io_wrMask; // @[TopLevel.scala 34:30]
+  wire  SPIPeripheral_clock; // @[TopLevel.scala 35:29]
+  wire  SPIPeripheral_reset; // @[TopLevel.scala 35:29]
+  wire  SPIPeripheral_io_rd; // @[TopLevel.scala 35:29]
+  wire [31:0] SPIPeripheral_io_rdData; // @[TopLevel.scala 35:29]
+  wire [31:0] SPIPeripheral_io_wrData; // @[TopLevel.scala 35:29]
+  wire [3:0] SPIPeripheral_io_wrMask; // @[TopLevel.scala 35:29]
+  wire  GPIOPeripheral_clock; // @[TopLevel.scala 36:30]
+  wire  GPIOPeripheral_reset; // @[TopLevel.scala 36:30]
+  wire [31:0] GPIOPeripheral_io_mem_ifc_address; // @[TopLevel.scala 36:30]
+  wire  GPIOPeripheral_io_mem_ifc_rd; // @[TopLevel.scala 36:30]
+  wire  GPIOPeripheral_io_mem_ifc_wr; // @[TopLevel.scala 36:30]
+  wire [31:0] GPIOPeripheral_io_mem_ifc_rdData; // @[TopLevel.scala 36:30]
+  wire [31:0] GPIOPeripheral_io_mem_ifc_wrData; // @[TopLevel.scala 36:30]
+  wire [31:0] NativeMemory2Pipecon_io_pipe_address; // @[TopLevel.scala 37:36]
+  wire  NativeMemory2Pipecon_io_pipe_rd; // @[TopLevel.scala 37:36]
+  wire  NativeMemory2Pipecon_io_pipe_wr; // @[TopLevel.scala 37:36]
+  wire [31:0] NativeMemory2Pipecon_io_pipe_rdData; // @[TopLevel.scala 37:36]
+  wire [31:0] NativeMemory2Pipecon_io_pipe_wrData; // @[TopLevel.scala 37:36]
+  wire [3:0] NativeMemory2Pipecon_io_pipe_wrMask; // @[TopLevel.scala 37:36]
+  wire [8:0] NativeMemory2Pipecon_io_native_address; // @[TopLevel.scala 37:36]
+  wire [31:0] NativeMemory2Pipecon_io_native_wdata; // @[TopLevel.scala 37:36]
+  wire [31:0] NativeMemory2Pipecon_io_native_rdata; // @[TopLevel.scala 37:36]
+  wire  NativeMemory2Pipecon_io_native_cs; // @[TopLevel.scala 37:36]
+  wire [3:0] NativeMemory2Pipecon_io_native_wmask; // @[TopLevel.scala 37:36]
+  wire  NativeMemory2Pipecon_io_native_wen; // @[TopLevel.scala 37:36]
+  PipeConInterconnect interconnect_ ( // @[TopLevel.scala 27:28]
     .clock(interconnect__clock),
     .reset(interconnect__reset),
     .io_device_0_rd(interconnect__io_device_0_rd),
@@ -2436,6 +2495,12 @@ module TopLevel(
     .io_device_2_wr(interconnect__io_device_2_wr),
     .io_device_2_rdData(interconnect__io_device_2_rdData),
     .io_device_2_wrData(interconnect__io_device_2_wrData),
+    .io_device_3_address(interconnect__io_device_3_address),
+    .io_device_3_rd(interconnect__io_device_3_rd),
+    .io_device_3_wr(interconnect__io_device_3_wr),
+    .io_device_3_rdData(interconnect__io_device_3_rdData),
+    .io_device_3_wrData(interconnect__io_device_3_wrData),
+    .io_device_3_wrMask(interconnect__io_device_3_wrMask),
     .io_dmem_rdAddress(interconnect__io_dmem_rdAddress),
     .io_dmem_rdData(interconnect__io_dmem_rdData),
     .io_dmem_rdEnable(interconnect__io_dmem_rdEnable),
@@ -2446,7 +2511,7 @@ module TopLevel(
     .io_dmem_wrEnable_2(interconnect__io_dmem_wrEnable_2),
     .io_dmem_wrEnable_3(interconnect__io_dmem_wrEnable_3)
   );
-  ThreeCats cpu ( // @[TopLevel.scala 29:19]
+  ThreeCats cpu ( // @[TopLevel.scala 30:19]
     .clock(cpu_clock),
     .reset(cpu_reset),
     .io_dmem_rdAddress(cpu_io_dmem_rdAddress),
@@ -2459,7 +2524,7 @@ module TopLevel(
     .io_dmem_wrEnable_2(cpu_io_dmem_wrEnable_2),
     .io_dmem_wrEnable_3(cpu_io_dmem_wrEnable_3)
   );
-  UARTPeripheral UARTPeripheral ( // @[TopLevel.scala 33:30]
+  UARTPeripheral UARTPeripheral ( // @[TopLevel.scala 34:30]
     .clock(UARTPeripheral_clock),
     .reset(UARTPeripheral_reset),
     .io_rd(UARTPeripheral_io_rd),
@@ -2467,7 +2532,7 @@ module TopLevel(
     .io_wrData(UARTPeripheral_io_wrData),
     .io_wrMask(UARTPeripheral_io_wrMask)
   );
-  SPIPeripheral SPIPeripheral ( // @[TopLevel.scala 34:29]
+  SPIPeripheral SPIPeripheral ( // @[TopLevel.scala 35:29]
     .clock(SPIPeripheral_clock),
     .reset(SPIPeripheral_reset),
     .io_rd(SPIPeripheral_io_rd),
@@ -2475,7 +2540,7 @@ module TopLevel(
     .io_wrData(SPIPeripheral_io_wrData),
     .io_wrMask(SPIPeripheral_io_wrMask)
   );
-  GPIOPeripheral GPIOPeripheral ( // @[TopLevel.scala 35:30]
+  GPIOPeripheral GPIOPeripheral ( // @[TopLevel.scala 36:30]
     .clock(GPIOPeripheral_clock),
     .reset(GPIOPeripheral_reset),
     .io_mem_ifc_address(GPIOPeripheral_io_mem_ifc_address),
@@ -2484,71 +2549,122 @@ module TopLevel(
     .io_mem_ifc_rdData(GPIOPeripheral_io_mem_ifc_rdData),
     .io_mem_ifc_wrData(GPIOPeripheral_io_mem_ifc_wrData)
   );
+  NativeMemory2Pipecon NativeMemory2Pipecon ( // @[TopLevel.scala 37:36]
+    .io_pipe_address(NativeMemory2Pipecon_io_pipe_address),
+    .io_pipe_rd(NativeMemory2Pipecon_io_pipe_rd),
+    .io_pipe_wr(NativeMemory2Pipecon_io_pipe_wr),
+    .io_pipe_rdData(NativeMemory2Pipecon_io_pipe_rdData),
+    .io_pipe_wrData(NativeMemory2Pipecon_io_pipe_wrData),
+    .io_pipe_wrMask(NativeMemory2Pipecon_io_pipe_wrMask),
+    .io_native_address(NativeMemory2Pipecon_io_native_address),
+    .io_native_wdata(NativeMemory2Pipecon_io_native_wdata),
+    .io_native_rdata(NativeMemory2Pipecon_io_native_rdata),
+    .io_native_cs(NativeMemory2Pipecon_io_native_cs),
+    .io_native_wmask(NativeMemory2Pipecon_io_native_wmask),
+    .io_native_wen(NativeMemory2Pipecon_io_native_wen)
+  );
+  assign io_mem_address = NativeMemory2Pipecon_io_native_address; // @[TopLevel.scala 63:34]
+  assign io_mem_wdata = NativeMemory2Pipecon_io_native_wdata; // @[TopLevel.scala 63:34]
+  assign io_mem_cs = NativeMemory2Pipecon_io_native_cs; // @[TopLevel.scala 63:34]
+  assign io_mem_wmask = NativeMemory2Pipecon_io_native_wmask; // @[TopLevel.scala 63:34]
+  assign io_mem_wen = NativeMemory2Pipecon_io_native_wen; // @[TopLevel.scala 63:34]
   assign interconnect__clock = clock;
   assign interconnect__reset = reset;
-  assign interconnect__io_device_0_rdData = UARTPeripheral_io_rdData; // @[TopLevel.scala 38:21]
-  assign interconnect__io_device_1_rdData = SPIPeripheral_io_rdData; // @[TopLevel.scala 39:20]
-  assign interconnect__io_device_2_rdData = GPIOPeripheral_io_mem_ifc_rdData; // @[TopLevel.scala 40:29]
-  assign interconnect__io_dmem_rdAddress = cpu_io_dmem_rdAddress; // @[TopLevel.scala 74:15]
-  assign interconnect__io_dmem_rdEnable = cpu_io_dmem_rdEnable; // @[TopLevel.scala 74:15]
-  assign interconnect__io_dmem_wrAddress = cpu_io_dmem_wrAddress; // @[TopLevel.scala 74:15]
-  assign interconnect__io_dmem_wrData = cpu_io_dmem_wrData; // @[TopLevel.scala 74:15]
-  assign interconnect__io_dmem_wrEnable_0 = cpu_io_dmem_wrEnable_0; // @[TopLevel.scala 74:15]
-  assign interconnect__io_dmem_wrEnable_1 = cpu_io_dmem_wrEnable_1; // @[TopLevel.scala 74:15]
-  assign interconnect__io_dmem_wrEnable_2 = cpu_io_dmem_wrEnable_2; // @[TopLevel.scala 74:15]
-  assign interconnect__io_dmem_wrEnable_3 = cpu_io_dmem_wrEnable_3; // @[TopLevel.scala 74:15]
+  assign interconnect__io_device_0_rdData = UARTPeripheral_io_rdData; // @[TopLevel.scala 39:21]
+  assign interconnect__io_device_1_rdData = SPIPeripheral_io_rdData; // @[TopLevel.scala 40:20]
+  assign interconnect__io_device_2_rdData = GPIOPeripheral_io_mem_ifc_rdData; // @[TopLevel.scala 41:29]
+  assign interconnect__io_device_3_rdData = NativeMemory2Pipecon_io_pipe_rdData; // @[TopLevel.scala 42:32]
+  assign interconnect__io_dmem_rdAddress = cpu_io_dmem_rdAddress; // @[TopLevel.scala 75:15]
+  assign interconnect__io_dmem_rdEnable = cpu_io_dmem_rdEnable; // @[TopLevel.scala 75:15]
+  assign interconnect__io_dmem_wrAddress = cpu_io_dmem_wrAddress; // @[TopLevel.scala 75:15]
+  assign interconnect__io_dmem_wrData = cpu_io_dmem_wrData; // @[TopLevel.scala 75:15]
+  assign interconnect__io_dmem_wrEnable_0 = cpu_io_dmem_wrEnable_0; // @[TopLevel.scala 75:15]
+  assign interconnect__io_dmem_wrEnable_1 = cpu_io_dmem_wrEnable_1; // @[TopLevel.scala 75:15]
+  assign interconnect__io_dmem_wrEnable_2 = cpu_io_dmem_wrEnable_2; // @[TopLevel.scala 75:15]
+  assign interconnect__io_dmem_wrEnable_3 = cpu_io_dmem_wrEnable_3; // @[TopLevel.scala 75:15]
   assign cpu_clock = clock;
   assign cpu_reset = reset;
-  assign cpu_io_dmem_rdData = interconnect__io_dmem_rdData; // @[TopLevel.scala 74:15]
+  assign cpu_io_dmem_rdData = interconnect__io_dmem_rdData; // @[TopLevel.scala 75:15]
   assign UARTPeripheral_clock = clock;
   assign UARTPeripheral_reset = reset;
-  assign UARTPeripheral_io_rd = interconnect__io_device_0_rd; // @[TopLevel.scala 38:21]
-  assign UARTPeripheral_io_wrData = interconnect__io_device_0_wrData; // @[TopLevel.scala 38:21]
-  assign UARTPeripheral_io_wrMask = interconnect__io_device_0_wrMask; // @[TopLevel.scala 38:21]
+  assign UARTPeripheral_io_rd = interconnect__io_device_0_rd; // @[TopLevel.scala 39:21]
+  assign UARTPeripheral_io_wrData = interconnect__io_device_0_wrData; // @[TopLevel.scala 39:21]
+  assign UARTPeripheral_io_wrMask = interconnect__io_device_0_wrMask; // @[TopLevel.scala 39:21]
   assign SPIPeripheral_clock = clock;
   assign SPIPeripheral_reset = reset;
-  assign SPIPeripheral_io_rd = interconnect__io_device_1_rd; // @[TopLevel.scala 39:20]
-  assign SPIPeripheral_io_wrData = interconnect__io_device_1_wrData; // @[TopLevel.scala 39:20]
-  assign SPIPeripheral_io_wrMask = interconnect__io_device_1_wrMask; // @[TopLevel.scala 39:20]
+  assign SPIPeripheral_io_rd = interconnect__io_device_1_rd; // @[TopLevel.scala 40:20]
+  assign SPIPeripheral_io_wrData = interconnect__io_device_1_wrData; // @[TopLevel.scala 40:20]
+  assign SPIPeripheral_io_wrMask = interconnect__io_device_1_wrMask; // @[TopLevel.scala 40:20]
   assign GPIOPeripheral_clock = clock;
   assign GPIOPeripheral_reset = reset;
-  assign GPIOPeripheral_io_mem_ifc_address = interconnect__io_device_2_address; // @[TopLevel.scala 40:29]
-  assign GPIOPeripheral_io_mem_ifc_rd = interconnect__io_device_2_rd; // @[TopLevel.scala 40:29]
-  assign GPIOPeripheral_io_mem_ifc_wr = interconnect__io_device_2_wr; // @[TopLevel.scala 40:29]
-  assign GPIOPeripheral_io_mem_ifc_wrData = interconnect__io_device_2_wrData; // @[TopLevel.scala 40:29]
+  assign GPIOPeripheral_io_mem_ifc_address = interconnect__io_device_2_address; // @[TopLevel.scala 41:29]
+  assign GPIOPeripheral_io_mem_ifc_rd = interconnect__io_device_2_rd; // @[TopLevel.scala 41:29]
+  assign GPIOPeripheral_io_mem_ifc_wr = interconnect__io_device_2_wr; // @[TopLevel.scala 41:29]
+  assign GPIOPeripheral_io_mem_ifc_wrData = interconnect__io_device_2_wrData; // @[TopLevel.scala 41:29]
+  assign NativeMemory2Pipecon_io_pipe_address = interconnect__io_device_3_address; // @[TopLevel.scala 42:32]
+  assign NativeMemory2Pipecon_io_pipe_rd = interconnect__io_device_3_rd; // @[TopLevel.scala 42:32]
+  assign NativeMemory2Pipecon_io_pipe_wr = interconnect__io_device_3_wr; // @[TopLevel.scala 42:32]
+  assign NativeMemory2Pipecon_io_pipe_wrData = interconnect__io_device_3_wrData; // @[TopLevel.scala 42:32]
+  assign NativeMemory2Pipecon_io_pipe_wrMask = interconnect__io_device_3_wrMask; // @[TopLevel.scala 42:32]
+  assign NativeMemory2Pipecon_io_native_rdata = io_mem_rdata; // @[TopLevel.scala 63:34]
 endmodule
 module CaravelTopLevel(
-  input          io_wb_clk_i,
-  input          io_wb_rst_i,
-  input          io_wbs_stb_i,
-  input          io_wbs_cyc_i,
-  input          io_wbs_we_i,
-  input  [3:0]   io_wbs_sel_i,
-  input  [31:0]  io_wbs_dat_i,
-  input  [31:0]  io_wbs_adr_i,
-  output         io_wbs_ack_o,
-  output [31:0]  io_wbs_dat_o,
-  input  [127:0] io_la_data_in,
-  output [127:0] io_la_data_out,
-  input  [127:0] io_la_oenb,
-  input  [37:0]  io_io_in,
-  output [37:0]  io_io_out,
-  output [37:0]  io_io_oeb,
-  input          io_user_clock2,
-  output [2:0]   io_user_irq
+  input          io_caravel_wb_clk_i,
+  input          io_caravel_wb_rst_i,
+  input          io_caravel_wbs_stb_i,
+  input          io_caravel_wbs_cyc_i,
+  input          io_caravel_wbs_we_i,
+  input  [3:0]   io_caravel_wbs_sel_i,
+  input  [31:0]  io_caravel_wbs_dat_i,
+  input  [31:0]  io_caravel_wbs_adr_i,
+  output         io_caravel_wbs_ack_o,
+  output [31:0]  io_caravel_wbs_dat_o,
+  input  [127:0] io_caravel_la_data_in,
+  output [127:0] io_caravel_la_data_out,
+  input  [127:0] io_caravel_la_oenb,
+  input  [37:0]  io_caravel_io_in,
+  output [37:0]  io_caravel_io_out,
+  output [37:0]  io_caravel_io_oeb,
+  input          io_caravel_user_clock2,
+  output [2:0]   io_caravel_user_irq,
+  output [8:0]   io_mem_address,
+  output [31:0]  io_mem_wdata,
+  input  [31:0]  io_mem_rdata,
+  output         io_mem_cs,
+  output [3:0]   io_mem_wmask,
+  output         io_mem_wen
 );
-  wire  topLevel_clock; // @[CaravelTopLevel.scala 140:26]
-  wire  topLevel_reset; // @[CaravelTopLevel.scala 140:26]
-  TopLevel topLevel ( // @[CaravelTopLevel.scala 140:26]
+  wire  topLevel_clock; // @[CaravelTopLevel.scala 143:26]
+  wire  topLevel_reset; // @[CaravelTopLevel.scala 143:26]
+  wire [8:0] topLevel_io_mem_address; // @[CaravelTopLevel.scala 143:26]
+  wire [31:0] topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 143:26]
+  wire [31:0] topLevel_io_mem_rdata; // @[CaravelTopLevel.scala 143:26]
+  wire  topLevel_io_mem_cs; // @[CaravelTopLevel.scala 143:26]
+  wire [3:0] topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 143:26]
+  wire  topLevel_io_mem_wen; // @[CaravelTopLevel.scala 143:26]
+  wire  _io_caravel_la_data_out_T = ~io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 156:31]
+  TopLevel topLevel ( // @[CaravelTopLevel.scala 143:26]
     .clock(topLevel_clock),
-    .reset(topLevel_reset)
+    .reset(topLevel_reset),
+    .io_mem_address(topLevel_io_mem_address),
+    .io_mem_wdata(topLevel_io_mem_wdata),
+    .io_mem_rdata(topLevel_io_mem_rdata),
+    .io_mem_cs(topLevel_io_mem_cs),
+    .io_mem_wmask(topLevel_io_mem_wmask),
+    .io_mem_wen(topLevel_io_mem_wen)
   );
-  assign io_wbs_ack_o = 1'h0; // @[CaravelTopLevel.scala 133:16]
-  assign io_wbs_dat_o = 32'h0; // @[CaravelTopLevel.scala 134:16]
-  assign io_la_data_out = 128'h0;
-  assign io_io_out = 38'h0; // @[Cat.scala 33:92]
-  assign io_io_oeb = 38'h0; // @[Cat.scala 33:92]
-  assign io_user_irq = 3'h0;
-  assign topLevel_clock = io_wb_clk_i; // @[CaravelTopLevel.scala 110:25 116:7]
-  assign topLevel_reset = io_wb_rst_i; // @[CaravelTopLevel.scala 111:25 122:7]
+  assign io_caravel_wbs_ack_o = 1'h0; // @[CaravelTopLevel.scala 136:24]
+  assign io_caravel_wbs_dat_o = 32'h0; // @[CaravelTopLevel.scala 137:24]
+  assign io_caravel_la_data_out = {{127'd0}, _io_caravel_la_data_out_T}; // @[CaravelTopLevel.scala 156:28]
+  assign io_caravel_io_out = 38'h0; // @[Cat.scala 33:92]
+  assign io_caravel_io_oeb = 38'h0; // @[Cat.scala 33:92]
+  assign io_caravel_user_irq = 3'h0;
+  assign io_mem_address = topLevel_io_mem_address; // @[CaravelTopLevel.scala 146:21]
+  assign io_mem_wdata = topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 146:21]
+  assign io_mem_cs = topLevel_io_mem_cs; // @[CaravelTopLevel.scala 146:21]
+  assign io_mem_wmask = topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 146:21]
+  assign io_mem_wen = topLevel_io_mem_wen; // @[CaravelTopLevel.scala 146:21]
+  assign topLevel_clock = io_caravel_wb_clk_i; // @[CaravelTopLevel.scala 113:25 119:7]
+  assign topLevel_reset = io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 114:25 125:7]
+  assign topLevel_io_mem_rdata = io_mem_rdata; // @[CaravelTopLevel.scala 146:21]
 endmodule
