@@ -82,27 +82,44 @@ module user_project_wrapper #(
 /* User project is instantiated  here   */
 /*--------------------------------------*/
 
-
-CaravelTopLevel mprj (
-    .io_wb_clk_i(wb_clk_i),
-    .io_wb_rst_i(wb_rst_i),
-    .io_wbs_stb_i(wbs_stb_i),
-    .io_wbs_cyc_i(wbs_cyc_i),
-    .io_wbs_we_i(wbs_we_i),
-    .io_wbs_sel_i(wbs_sel_i),
-    .io_wbs_dat_i(wbs_dat_i),
-    .io_wbs_adr_i(wbs_adr_i),
-    .io_wbs_ack_o(wbs_ack_o),
-    .io_wbs_dat_o(wbs_dat_o),
-    .io_la_data_in(la_data_in),
-    .io_la_data_out(la_data_out),
-    .io_la_oenb(la_oenb),
-    .io_io_in({io_in[37:0]}),
-    .io_io_out(io_out),
-    .io_io_oeb(io_oeb),
-    .io_user_clock2(user_clock2),
-    .io_user_irq(user_irq)
+sky130_sram_2kbyte_1rw1r_32x512_8 OpenRAM_inst1 (
+`ifdef USE_POWER_PINS
+    .vccd1(vccd1),
+    .vssd1(vssd1),
+`endif
+    .clk0(wb_clk_i),
+    .csb0(wbs_cyc_i),
+    .web0(wbs_cyc_i),
+    .wmask0(wbs_dat_i[3:0]),
+    .addr0(wbs_adr_i[8:0]),
+    .din0(wbs_dat_i),
+    .dout0(wbs_dat_o),
+    .clk1(wb_clk_i),
+    .csb1(wbs_cyc_i),
+    .addr1(wbs_adr_i[8:0]),
+    .dout1(wbs_dat_o)
 );
+
+// CaravelTopLevel mprj (
+//     .io_wb_clk_i(wb_clk_i),
+//     .io_wb_rst_i(wb_rst_i),
+//     .io_wbs_stb_i(wbs_stb_i),
+//     .io_wbs_cyc_i(wbs_cyc_i),
+//     .io_wbs_we_i(wbs_we_i),
+//     .io_wbs_sel_i(wbs_sel_i),
+//     .io_wbs_dat_i(wbs_dat_i),
+//     .io_wbs_adr_i(wbs_adr_i),
+//     .io_wbs_ack_o(wbs_ack_o),
+//     .io_wbs_dat_o(wbs_dat_o),
+//     .io_la_data_in(la_data_in),
+//     .io_la_data_out(la_data_out),
+//     .io_la_oenb(la_oenb),
+//     .io_io_in({io_in[37:0]}),
+//     .io_io_out(io_out),
+//     .io_io_oeb(io_oeb),
+//     .io_user_clock2(user_clock2),
+//     .io_user_irq(user_irq)
+// );
 
 endmodule	// user_project_wrapper
 
