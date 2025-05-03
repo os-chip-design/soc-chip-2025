@@ -29,7 +29,8 @@ endif
 
 MEM_FILES = \
 	https://github.com/VLSIDA/sky130_sram_macros/raw/refs/heads/main/sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.gds \
-	https://raw.githubusercontent.com/VLSIDA/sky130_sram_macros/refs/heads/main/sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.lef
+	https://github.com/VLSIDA/sky130_sram_macros/raw/refs/heads/main/sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.lef \
+	https://github.com/VLSIDA/sky130_sram_macros/raw/refs/heads/main/sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8_TT_1p8V_25C.lib
 
 MEM_FOLDER = sky130_sram_2kbyte_1rw1r_32x512_8
 
@@ -107,16 +108,7 @@ openlane: check-openlane-env
 		export OPENLANE_IMAGE_NAME=efabless/openlane:$(OPENLANE_TAG) && \
 		export IMAGE_NAME=efabless/openlane:$(OPENLANE_TAG) && \
 		$(MAKE) pull-openlane
-		@mkdir -p $(MEM_FOLDER)
-		@for entry in $(MEM_FILES); do \
-			filename=$$(basename $$entry); \
-			echo "Downloading $$filename"; \
-			if [ ! -f $(MEM_FOLDER)/$$filename ]; then \
-				curl -L $$entry -o $(MEM_FOLDER)/$$filename; \
-			else \
-				echo "File $$filename already exists"; \
-			fi; \
-		done
+		$(MAKE) pull-mem-files
 
 .PHONY: check-openlane-env
 check-openlane-env:
