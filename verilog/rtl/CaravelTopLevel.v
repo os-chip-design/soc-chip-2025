@@ -677,17 +677,16 @@ module PipeConInterconnect(
   wire  _T_48 = (io_dmem_wrEnable_0 | io_dmem_wrEnable_1 | io_dmem_wrEnable_2 | io_dmem_wrEnable_3) & io_dmem_wrAddress
      >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff | _T_47; // @[PipeConInterconnect.scala 48:110]
   wire [3:0] _selectedWrMask_T = {io_dmem_wrEnable_3,io_dmem_wrEnable_2,io_dmem_wrEnable_1,io_dmem_wrEnable_0}; // @[PipeConInterconnect.scala 63:45]
-  wire [31:0] _GEN_26 = 2'h1 == selectedIdx ? io_device_1_rdData : io_device_0_rdData; // @[PipeConInterconnect.scala 70:{25,25}]
-  wire [31:0] _GEN_27 = 2'h2 == selectedIdx ? io_device_2_rdData : _GEN_26; // @[PipeConInterconnect.scala 70:{25,25}]
-  wire [31:0] _GEN_28 = 2'h3 == selectedIdx ? io_device_3_rdData : _GEN_27; // @[PipeConInterconnect.scala 70:{25,25}]
-  wire  _GEN_29 = io_dmem_rdEnable ? 1'h0 : selectedWr; // @[PipeConInterconnect.scala 66:38 67:25 20:32]
-  wire  _GEN_30 = io_dmem_rdEnable | selectedRd; // @[PipeConInterconnect.scala 66:38 68:25 19:32]
-  wire  _GEN_33 = _T_3 | _GEN_29; // @[PipeConInterconnect.scala 58:46 59:25]
-  wire  _GEN_39 = _T_3 | state; // @[PipeConInterconnect.scala 26:22 58:46 65:25]
-  wire  _GEN_42 = 2'h1 == selectedIdx ? io_device_1_ack : io_device_0_ack; // @[PipeConInterconnect.scala 75:{40,40}]
-  wire  _GEN_43 = 2'h2 == selectedIdx ? io_device_2_ack : _GEN_42; // @[PipeConInterconnect.scala 75:{40,40}]
-  wire  _GEN_44 = 2'h3 == selectedIdx ? io_device_3_ack : _GEN_43; // @[PipeConInterconnect.scala 75:{40,40}]
-  wire [15:0] _ackCounter_T_1 = ackCounter + 16'h1; // @[PipeConInterconnect.scala 80:34]
+  wire  _GEN_26 = 2'h1 == selectedIdx ? io_device_1_ack : io_device_0_ack; // @[PipeConInterconnect.scala 67:{43,43}]
+  wire  _GEN_27 = 2'h2 == selectedIdx ? io_device_2_ack : _GEN_26; // @[PipeConInterconnect.scala 67:{43,43}]
+  wire  _GEN_28 = 2'h3 == selectedIdx ? io_device_3_ack : _GEN_27; // @[PipeConInterconnect.scala 67:{43,43}]
+  wire [31:0] _GEN_31 = 2'h1 == selectedIdx ? io_device_1_rdData : io_device_0_rdData; // @[PipeConInterconnect.scala 77:{25,25}]
+  wire [31:0] _GEN_32 = 2'h2 == selectedIdx ? io_device_2_rdData : _GEN_31; // @[PipeConInterconnect.scala 77:{25,25}]
+  wire [31:0] _GEN_33 = 2'h3 == selectedIdx ? io_device_3_rdData : _GEN_32; // @[PipeConInterconnect.scala 77:{25,25}]
+  wire  _GEN_34 = io_dmem_rdEnable ? 1'h0 : selectedWr; // @[PipeConInterconnect.scala 73:38 74:25 20:32]
+  wire  _GEN_35 = io_dmem_rdEnable | selectedRd; // @[PipeConInterconnect.scala 73:38 75:25 19:32]
+  wire  _GEN_38 = _T_3 | _GEN_34; // @[PipeConInterconnect.scala 58:46 59:25]
+  wire [15:0] _ackCounter_T_1 = ackCounter + 16'h1; // @[PipeConInterconnect.scala 87:34]
   assign io_device_0_rd = 2'h0 == selectedIdx & selectedRd; // @[PipeConInterconnect.scala 30:26 38:{34,34}]
   assign io_device_0_wrData = 2'h0 == selectedIdx ? selectedWrData : 32'h0; // @[PipeConInterconnect.scala 33:26 41:{34,34}]
   assign io_device_0_wrMask = 2'h0 == selectedIdx ? selectedWrMask : 4'h0; // @[PipeConInterconnect.scala 34:26 42:{34,34}]
@@ -703,14 +702,14 @@ module PipeConInterconnect(
   assign io_device_3_wr = _GEN_9 & selectedWr; // @[PipeConInterconnect.scala 31:26 39:{34,34}]
   assign io_device_3_wrData = 2'h3 == selectedIdx ? selectedWrData : 32'h0; // @[PipeConInterconnect.scala 33:26 41:{34,34}]
   assign io_device_3_wrMask = 2'h3 == selectedIdx ? selectedWrMask : 4'h0; // @[PipeConInterconnect.scala 34:26 42:{34,34}]
-  assign io_dmem_rdData = rdDataReg; // @[PipeConInterconnect.scala 86:18]
+  assign io_dmem_rdData = rdDataReg; // @[PipeConInterconnect.scala 93:18]
   always @(posedge clock) begin
     if (reset) begin // @[PipeConInterconnect.scala 14:31]
       rdDataReg <= 32'h0; // @[PipeConInterconnect.scala 14:31]
     end else if (_T) begin // @[PipeConInterconnect.scala 56:18]
       if (!(_T_3)) begin // @[PipeConInterconnect.scala 58:46]
-        if (io_dmem_rdEnable) begin // @[PipeConInterconnect.scala 66:38]
-          rdDataReg <= _GEN_28; // @[PipeConInterconnect.scala 70:25]
+        if (io_dmem_rdEnable) begin // @[PipeConInterconnect.scala 73:38]
+          rdDataReg <= _GEN_33; // @[PipeConInterconnect.scala 77:25]
         end
       end
     end
@@ -721,10 +720,10 @@ module PipeConInterconnect(
         ackCounter <= 16'h0; // @[PipeConInterconnect.scala 64:25]
       end
     end else if (state) begin // @[PipeConInterconnect.scala 56:18]
-      if (_GEN_44 | ackCounter >= 16'h14) begin // @[PipeConInterconnect.scala 75:73]
-        ackCounter <= 16'h0; // @[PipeConInterconnect.scala 77:20]
+      if (_GEN_28 | ackCounter >= 16'h14) begin // @[PipeConInterconnect.scala 82:73]
+        ackCounter <= 16'h0; // @[PipeConInterconnect.scala 84:20]
       end else begin
-        ackCounter <= _ackCounter_T_1; // @[PipeConInterconnect.scala 80:20]
+        ackCounter <= _ackCounter_T_1; // @[PipeConInterconnect.scala 87:20]
       end
     end
     if (reset) begin // @[PipeConInterconnect.scala 18:32]
@@ -744,16 +743,16 @@ module PipeConInterconnect(
       if (_T_3) begin // @[PipeConInterconnect.scala 58:46]
         selectedRd <= 1'h0; // @[PipeConInterconnect.scala 60:25]
       end else begin
-        selectedRd <= _GEN_30;
+        selectedRd <= _GEN_35;
       end
     end
     if (reset) begin // @[PipeConInterconnect.scala 20:32]
       selectedWr <= 1'h0; // @[PipeConInterconnect.scala 20:32]
     end else if (_T) begin // @[PipeConInterconnect.scala 56:18]
-      selectedWr <= _GEN_33;
+      selectedWr <= _GEN_38;
     end else if (state) begin // @[PipeConInterconnect.scala 56:18]
-      if (_GEN_44 | ackCounter >= 16'h14) begin // @[PipeConInterconnect.scala 75:73]
-        selectedWr <= 1'h0; // @[PipeConInterconnect.scala 76:20]
+      if (_GEN_28 | ackCounter >= 16'h14) begin // @[PipeConInterconnect.scala 82:73]
+        selectedWr <= 1'h0; // @[PipeConInterconnect.scala 83:20]
       end
     end
     if (reset) begin // @[PipeConInterconnect.scala 21:32]
@@ -761,8 +760,8 @@ module PipeConInterconnect(
     end else if (_T) begin // @[PipeConInterconnect.scala 56:18]
       if (_T_3) begin // @[PipeConInterconnect.scala 58:46]
         selectedAddress <= io_dmem_wrAddress; // @[PipeConInterconnect.scala 61:25]
-      end else if (io_dmem_rdEnable) begin // @[PipeConInterconnect.scala 66:38]
-        selectedAddress <= io_dmem_rdAddress; // @[PipeConInterconnect.scala 69:25]
+      end else if (io_dmem_rdEnable) begin // @[PipeConInterconnect.scala 73:38]
+        selectedAddress <= io_dmem_rdAddress; // @[PipeConInterconnect.scala 76:25]
       end
     end
     if (reset) begin // @[PipeConInterconnect.scala 22:32]
@@ -782,10 +781,16 @@ module PipeConInterconnect(
     if (reset) begin // @[PipeConInterconnect.scala 26:22]
       state <= 1'h0; // @[PipeConInterconnect.scala 26:22]
     end else if (_T) begin // @[PipeConInterconnect.scala 56:18]
-      state <= _GEN_39;
+      if (_T_3) begin // @[PipeConInterconnect.scala 58:46]
+        if (_GEN_28) begin // @[PipeConInterconnect.scala 67:43]
+          state <= 1'h0; // @[PipeConInterconnect.scala 68:17]
+        end else begin
+          state <= 1'h1; // @[PipeConInterconnect.scala 70:17]
+        end
+      end
     end else if (state) begin // @[PipeConInterconnect.scala 56:18]
-      if (_GEN_44 | ackCounter >= 16'h14) begin // @[PipeConInterconnect.scala 75:73]
-        state <= 1'h0; // @[PipeConInterconnect.scala 78:15]
+      if (_GEN_28 | ackCounter >= 16'h14) begin // @[PipeConInterconnect.scala 82:73]
+        state <= 1'h0; // @[PipeConInterconnect.scala 85:15]
       end
     end
   end
