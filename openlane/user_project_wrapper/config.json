@@ -14,17 +14,27 @@
     "MACRO_PLACEMENT_CFG": "dir::macro.cfg",
     "MAGIC_DEF_LABELS": 0,
     "VERILOG_FILES_BLACKBOX": [
+        "dir::../../verilog/gl/CaravelTopLevel.v",
         "dir::../../verilog/rtl/sky130_sram_2kbyte_1rw1r_32x512_8.v"
     ],
     "EXTRA_LEFS": [
+        "dir::../../lef/CaravelTopLevel.lef",
         "dir::../sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.lef"
         
     ], 
     "EXTRA_GDS_FILES": [
+        "dir::../../gds/CaravelTopLevel.gds",
         "dir::../sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.gds"
     ],
     "EXTRA_LIBS": [
+        "dir::../../lib/CaravelTopLevel.lib",
         "dir::../sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8_TT_1p8V_25C.lib"
+    ],
+    "EXTRA_SPEFS": [
+        "CaravelTopLevel", 
+        "dir::../../spef/multicorner/CaravelTopLevel.min.spef",
+        "dir::../../spef/multicorner/CaravelTopLevel.nom.spef",
+        "dir::../../spef/multicorner/CaravelTopLevel.max.spef"
     ],
     "BASE_SDC_FILE": "dir::base_user_project_wrapper.sdc",
     "QUIT_ON_MAGIC_DRC": 0,
