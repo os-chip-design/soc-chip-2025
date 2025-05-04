@@ -88,7 +88,9 @@ wire [3:0] wmask0;
 wire [9:0] addr0;
 wire [31:0] din0;
 wire [31:0] dout0;
-wire [31:0] unused_dout1;
+// wire [31:0] unused_dout1;
+
+// assign dout0 = 0;
 
 sky130_sram_2kbyte_1rw1r_32x512_8 OpenRAM_inst1 (
 `ifdef USE_POWER_PINS
