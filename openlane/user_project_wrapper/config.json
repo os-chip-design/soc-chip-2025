@@ -9,7 +9,8 @@
     "CLOCK_PORT": "wb_clk_i",
     "CLOCK_NET": "mprj.clk",
     "FP_PDN_MACRO_HOOKS": [
-        "mprj vccd1 vssd1 vccd1 vssd1"
+        "mprj vccd1 vssd1 vccd1 vssd1",
+        "OpenRAM_inst1 vccd1 vssd1 vccd1 vssd1"
     ],
     "MACRO_PLACEMENT_CFG": "dir::macro.cfg",
     "MAGIC_DEF_LABELS": 0,
