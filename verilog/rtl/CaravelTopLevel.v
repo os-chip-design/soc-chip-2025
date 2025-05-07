@@ -2861,7 +2861,7 @@ module TopLevel(
   assign NativeMemory2Pipecon_io_pipe_wrMask = interconnect__io_device_3_wrMask; // @[TopLevel.scala 60:32]
   assign NativeMemory2Pipecon_io_native_rdata = io_mem_rdata; // @[TopLevel.scala 81:34]
 endmodule
-module CaravelTopLevel(
+module CaravelTopLevel_ch(
   input          io_caravel_wb_clk_i,
   input          io_caravel_wb_rst_i,
   input          io_caravel_wbs_stb_i,
@@ -2920,4 +2920,81 @@ module CaravelTopLevel(
   assign topLevel_clock = io_caravel_wb_clk_i; // @[CaravelTopLevel.scala 113:25 119:7]
   assign topLevel_reset = io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 114:25 125:7]
   assign topLevel_io_mem_rdata = io_mem_rdata; // @[CaravelTopLevel.scala 147:21]
+endmodule
+
+module CaravelTopLevel(
+  input          io_caravel_wb_clk_i,
+  input          io_caravel_wb_rst_i,
+  input          io_caravel_wbs_stb_i,
+  input          io_caravel_wbs_cyc_i,
+  input          io_caravel_wbs_we_i,
+  input  [3:0]   io_caravel_wbs_sel_i,
+  input  [31:0]  io_caravel_wbs_dat_i,
+  input  [31:0]  io_caravel_wbs_adr_i,
+  output         io_caravel_wbs_ack_o,
+  output [31:0]  io_caravel_wbs_dat_o,
+  input  [127:0] io_caravel_la_data_in,
+  output [127:0] io_caravel_la_data_out,
+  input  [127:0] io_caravel_la_oenb,
+  input  [37:0]  io_caravel_io_in,
+  output [37:0]  io_caravel_io_out,
+  output [37:0]  io_caravel_io_oeb,
+  input          io_caravel_user_clock2,
+  output [2:0]   io_caravel_user_irq
+);
+    wire csb0;
+    wire web0;
+    wire [3:0] wmask0;
+    wire [8:0] addr0;
+    wire [31:0] din0;
+    wire [31:0] dout0;
+
+    CaravelTopLevel_ch ch_inst (
+        .io_caravel_wb_clk_i   (io_caravel_wb_clk_i),
+        .io_caravel_wb_rst_i   (io_caravel_wb_rst_i),
+        .io_caravel_wbs_stb_i  (io_caravel_wbs_stb_i),
+        .io_caravel_wbs_cyc_i  (io_caravel_wbs_cyc_i),
+        .io_caravel_wbs_we_i   (io_caravel_wbs_we_i),
+        .io_caravel_wbs_sel_i  (io_caravel_wbs_sel_i),
+        .io_caravel_wbs_dat_i  (io_caravel_wbs_dat_i),
+        .io_caravel_wbs_adr_i  (io_caravel_wbs_adr_i),
+        .io_caravel_wbs_ack_o  (io_caravel_wbs_ack_o),
+        .io_caravel_wbs_dat_o  (io_caravel_wbs_dat_o),
+        .io_caravel_la_data_in (io_caravel_la_data_in),
+        .io_caravel_la_data_out(io_caravel_la_data_out),
+        .io_caravel_la_oenb    (io_caravel_la_oenb),
+        .io_caravel_io_in      ({io_caravel_io_in[37:0]}),
+        .io_caravel_io_out     (io_caravel_io_out),
+        .io_caravel_io_oeb     (io_caravel_io_oeb),
+        .io_caravel_user_clock2(io_caravel_user_clock2),
+        .io_caravel_user_irq   (io_caravel_user_irq),
+
+        .io_mem_address(addr0),
+        .io_mem_wdata(din0),
+        .io_mem_rdata(dout0),
+        .io_mem_cs(csb0),
+        .io_mem_wmask(wmask0),
+        .io_mem_wen(wmask0)
+    );
+
+    sky130_sram_2kbyte_1rw1r_32x512_8 OpenRAM_inst1 (
+        `ifdef USE_POWER_PINS
+        .vccd1(vccd1),
+        .vssd1(vssd1),
+        `endif
+        .clk0(wb_clk_i),
+        .csb0,
+        .web0,
+        .wmask0,
+        .addr0,
+        .din0,
+        .dout0,
+
+        // Disable second port
+        .clk1(0),
+        .csb1(1), // Active low
+        .addr1(0),
+        .dout1()
+    );
+
 endmodule
