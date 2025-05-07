@@ -27,6 +27,13 @@ ifeq ($(ROOTLESS), 1)
 	USER_ARGS =
 endif
 
+MEM_FILES = \
+	https://github.com/VLSIDA/sky130_sram_macros/raw/refs/heads/main/sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.gds \
+	https://github.com/VLSIDA/sky130_sram_macros/raw/refs/heads/main/sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8.lef \
+	https://github.com/VLSIDA/sky130_sram_macros/raw/refs/heads/main/sky130_sram_2kbyte_1rw1r_32x512_8/sky130_sram_2kbyte_1rw1r_32x512_8_TT_1p8V_25C.lib
+
+MEM_FOLDER = sky130_sram_2kbyte_1rw1r_32x512_8
+
 openlane_cmd = \
 	"flow.tcl \
 	-design $$(realpath ./$*) \
