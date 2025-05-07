@@ -101,6 +101,7 @@ openlane: check-openlane-env
 		export OPENLANE_IMAGE_NAME=efabless/openlane:$(OPENLANE_TAG) && \
 		export IMAGE_NAME=efabless/openlane:$(OPENLANE_TAG) && \
 		$(MAKE) pull-openlane
+		$(MAKE) pull-mem-files
 
 .PHONY: check-openlane-env
 check-openlane-env:
@@ -108,3 +109,16 @@ ifeq ($(OPENLANE_ROOT),)
 	@echo "Please export OPENLANE_ROOT"
 	@exit 1
 endif
+
+.PHONY: pull-mem-files
+pull-mem-files:
+	@mkdir -p $(MEM_FOLDER)
+	@for entry in $(MEM_FILES); do \
+		filename=$$(basename $$entry); \
+		echo "Downloading $$filename"; \
+		if [ ! -f $(MEM_FOLDER)/$$filename ]; then \
+			curl -L $$entry -o $(MEM_FOLDER)/$$filename; \
+		else \
+			echo "File $$filename already exists"; \
+		fi; \
+	done
