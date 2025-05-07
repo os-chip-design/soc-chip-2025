@@ -1,36 +1,3 @@
-(* blackbox *)
-module sky130_fd_io__top_gpiov2 (
-    input  wire        OUT,
-    input  wire        OE_N,
-    input  wire        HLD_H_N,
-    input  wire        ENABLE_H,
-    input  wire        ENABLE_INP_H,
-    input  wire        ENABLE_VDDA_H,
-    input  wire        ENABLE_VSWITCH_H,
-    input  wire        ENABLE_VDDIO,
-    input  wire        INP_DIS,
-    input  wire        IB_MODE_SEL,
-    input  wire        VTRIP_SEL,
-    input  wire        SLOW,
-    input  wire        HLD_OVR,
-    input  wire        ANALOG_EN,
-    input  wire        ANALOG_SEL,
-    input  wire        ANALOG_POL,
-    input  wire [2:0]  DM,
-
-    output wire        IN,
-    output wire        IN_H,
-    output wire        TIE_HI_ESD,
-
-    inout  wire        PAD,
-    inout  wire        PAD_A_NOESD_H,
-    inout  wire        PAD_A_ESD_0_H,
-    inout  wire        PAD_A_ESD_1_H,
-    inout  wire        AMUXBUS_A,
-    inout  wire        AMUXBUS_B
-);
-// synthesis syn_black_box
-endmodule
 module PipeConInterconnect(
   input         clock,
   input         reset,
@@ -2390,12 +2357,13 @@ module NativeMemory2Pipecon(
   output [3:0]  io_native_wmask,
   output        io_native_wen
 );
+  wire  enable = io_pipe_rd | io_pipe_wr; // @[NativeMemory2Pipecon.scala 14:27]
   assign io_pipe_rdData = io_native_rdata; // @[NativeMemory2Pipecon.scala 27:18]
   assign io_native_address = io_pipe_address[8:0]; // @[NativeMemory2Pipecon.scala 26:39]
   assign io_native_wdata = io_pipe_wrData; // @[NativeMemory2Pipecon.scala 28:19]
-  assign io_native_cs = io_pipe_rd | io_pipe_wr; // @[NativeMemory2Pipecon.scala 14:27]
+  assign io_native_cs = ~enable; // @[NativeMemory2Pipecon.scala 17:19]
   assign io_native_wmask = io_pipe_wrMask; // @[NativeMemory2Pipecon.scala 18:19]
-  assign io_native_wen = io_pipe_wr; // @[NativeMemory2Pipecon.scala 19:17]
+  assign io_native_wen = ~io_pipe_wr; // @[NativeMemory2Pipecon.scala 19:20]
 endmodule
 module TopLevel(
   input         clock,
@@ -2632,18 +2600,21 @@ module CaravelTopLevel(
   input  [31:0]  io_mem_rdata,
   output         io_mem_cs,
   output [3:0]   io_mem_wmask,
-  output         io_mem_wen
+  output         io_mem_wen,
+  output [8:0]   io_mem2_address,
+  input  [31:0]  io_mem2_rdata,
+  output         io_mem2_cs
 );
-  wire  topLevel_clock; // @[CaravelTopLevel.scala 143:26]
-  wire  topLevel_reset; // @[CaravelTopLevel.scala 143:26]
-  wire [8:0] topLevel_io_mem_address; // @[CaravelTopLevel.scala 143:26]
-  wire [31:0] topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 143:26]
-  wire [31:0] topLevel_io_mem_rdata; // @[CaravelTopLevel.scala 143:26]
-  wire  topLevel_io_mem_cs; // @[CaravelTopLevel.scala 143:26]
-  wire [3:0] topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 143:26]
-  wire  topLevel_io_mem_wen; // @[CaravelTopLevel.scala 143:26]
-  wire  _io_caravel_la_data_out_T = ~io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 156:31]
-  TopLevel topLevel ( // @[CaravelTopLevel.scala 143:26]
+  wire  topLevel_clock; // @[CaravelTopLevel.scala 152:26]
+  wire  topLevel_reset; // @[CaravelTopLevel.scala 152:26]
+  wire [8:0] topLevel_io_mem_address; // @[CaravelTopLevel.scala 152:26]
+  wire [31:0] topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 152:26]
+  wire [31:0] topLevel_io_mem_rdata; // @[CaravelTopLevel.scala 152:26]
+  wire  topLevel_io_mem_cs; // @[CaravelTopLevel.scala 152:26]
+  wire [3:0] topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 152:26]
+  wire  topLevel_io_mem_wen; // @[CaravelTopLevel.scala 152:26]
+  wire  _io_caravel_la_data_out_T = ~io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 165:31]
+  TopLevel topLevel ( // @[CaravelTopLevel.scala 152:26]
     .clock(topLevel_clock),
     .reset(topLevel_reset),
     .io_mem_address(topLevel_io_mem_address),
@@ -2653,18 +2624,20 @@ module CaravelTopLevel(
     .io_mem_wmask(topLevel_io_mem_wmask),
     .io_mem_wen(topLevel_io_mem_wen)
   );
-  assign io_caravel_wbs_ack_o = 1'h0; // @[CaravelTopLevel.scala 136:24]
-  assign io_caravel_wbs_dat_o = 32'h0; // @[CaravelTopLevel.scala 137:24]
-  assign io_caravel_la_data_out = {{127'd0}, _io_caravel_la_data_out_T}; // @[CaravelTopLevel.scala 156:28]
+  assign io_caravel_wbs_ack_o = 1'h0; // @[CaravelTopLevel.scala 141:24]
+  assign io_caravel_wbs_dat_o = 32'h0; // @[CaravelTopLevel.scala 142:24]
+  assign io_caravel_la_data_out = {{127'd0}, _io_caravel_la_data_out_T}; // @[CaravelTopLevel.scala 165:28]
   assign io_caravel_io_out = 38'h0; // @[Cat.scala 33:92]
   assign io_caravel_io_oeb = 38'h0; // @[Cat.scala 33:92]
   assign io_caravel_user_irq = 3'h0;
-  assign io_mem_address = topLevel_io_mem_address; // @[CaravelTopLevel.scala 146:21]
-  assign io_mem_wdata = topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 146:21]
-  assign io_mem_cs = topLevel_io_mem_cs; // @[CaravelTopLevel.scala 146:21]
-  assign io_mem_wmask = topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 146:21]
-  assign io_mem_wen = topLevel_io_mem_wen; // @[CaravelTopLevel.scala 146:21]
-  assign topLevel_clock = io_caravel_wb_clk_i; // @[CaravelTopLevel.scala 113:25 119:7]
-  assign topLevel_reset = io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 114:25 125:7]
-  assign topLevel_io_mem_rdata = io_mem_rdata; // @[CaravelTopLevel.scala 146:21]
+  assign io_mem_address = topLevel_io_mem_address; // @[CaravelTopLevel.scala 155:21]
+  assign io_mem_wdata = topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 155:21]
+  assign io_mem_cs = topLevel_io_mem_cs; // @[CaravelTopLevel.scala 155:21]
+  assign io_mem_wmask = topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 155:21]
+  assign io_mem_wen = topLevel_io_mem_wen; // @[CaravelTopLevel.scala 155:21]
+  assign io_mem2_address = 9'h0; // @[CaravelTopLevel.scala 147:19]
+  assign io_mem2_cs = 1'h1; // @[CaravelTopLevel.scala 148:14]
+  assign topLevel_clock = io_caravel_wb_clk_i; // @[CaravelTopLevel.scala 118:25 124:7]
+  assign topLevel_reset = io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 119:25 130:7]
+  assign topLevel_io_mem_rdata = io_mem_rdata; // @[CaravelTopLevel.scala 155:21]
 endmodule
