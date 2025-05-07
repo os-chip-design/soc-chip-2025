@@ -1,35 +1,126 @@
-(* blackbox *)
-module sky130_fd_io__top_gpiov2 (
-    input  wire        OUT,
-    input  wire        OE_N,
-    input  wire        HLD_H_N,
-    input  wire        ENABLE_H,
-    input  wire        ENABLE_INP_H,
-    input  wire        ENABLE_VDDA_H,
-    input  wire        ENABLE_VSWITCH_H,
-    input  wire        ENABLE_VDDIO,
-    input  wire        INP_DIS,
-    input  wire        IB_MODE_SEL,
-    input  wire        VTRIP_SEL,
-    input  wire        SLOW,
-    input  wire        HLD_OVR,
-    input  wire        ANALOG_EN,
-    input  wire        ANALOG_SEL,
-    input  wire        ANALOG_POL,
-    input  wire [2:0]  DM,
-
-    output wire        IN,
-    output wire        IN_H,
-    output wire        TIE_HI_ESD,
-
-    inout  wire        PAD,
-    inout  wire        PAD_A_NOESD_H,
-    inout  wire        PAD_A_ESD_0_H,
-    inout  wire        PAD_A_ESD_1_H,
-    inout  wire        AMUXBUS_A,
-    inout  wire        AMUXBUS_B
+module PipeConInterconnect(
+  input         clock,
+  input         reset,
+  output        io_device_0_rd,
+  input  [31:0] io_device_0_rdData,
+  output [31:0] io_device_0_wrData,
+  output [3:0]  io_device_0_wrMask,
+  output        io_device_1_rd,
+  input  [31:0] io_device_1_rdData,
+  output [31:0] io_device_1_wrData,
+  output [3:0]  io_device_1_wrMask,
+  output [31:0] io_device_2_address,
+  output        io_device_2_rd,
+  output        io_device_2_wr,
+  input  [31:0] io_device_2_rdData,
+  output [31:0] io_device_2_wrData,
+  output [31:0] io_device_3_address,
+  output        io_device_3_rd,
+  output        io_device_3_wr,
+  input  [31:0] io_device_3_rdData,
+  output [31:0] io_device_3_wrData,
+  output [3:0]  io_device_3_wrMask,
+  input  [31:0] io_dmem_rdAddress,
+  output [31:0] io_dmem_rdData,
+  input         io_dmem_rdEnable,
+  input  [31:0] io_dmem_wrAddress,
+  input  [31:0] io_dmem_wrData,
+  input         io_dmem_wrEnable_0,
+  input         io_dmem_wrEnable_1,
+  input         io_dmem_wrEnable_2,
+  input         io_dmem_wrEnable_3
 );
-// synthesis syn_black_box
+`ifdef RANDOMIZE_REG_INIT
+  reg [31:0] _RAND_0;
+`endif // RANDOMIZE_REG_INIT
+  reg [31:0] rdDataReg; // @[PipeConInterconnect.scala 19:26]
+  wire  selected_wr = io_dmem_wrEnable_0 | io_dmem_wrEnable_1 | io_dmem_wrEnable_2 | io_dmem_wrEnable_3; // @[PipeConInterconnect.scala 41:34]
+  wire [31:0] _GEN_30 = io_dmem_rdEnable ? io_dmem_rdAddress : 32'h0; // @[PipeConInterconnect.scala 26:20 47:32 50:22]
+  wire [31:0] selected_address = selected_wr ? io_dmem_wrAddress : _GEN_30; // @[PipeConInterconnect.scala 41:41 44:22]
+  wire  selected_rd = selected_wr ? 1'h0 : io_dmem_rdEnable; // @[PipeConInterconnect.scala 41:41 43:17]
+  wire [31:0] _GEN_3 = io_dmem_wrAddress <= 32'hf ? io_device_0_rdData : 32'h0; // @[PipeConInterconnect.scala 35:74 36:16 29:19]
+  wire [31:0] selected_wrData = selected_wr ? io_dmem_wrData : 32'h0; // @[PipeConInterconnect.scala 27:19 41:41 45:21]
+  wire [3:0] _selected_wrMask_T = {io_dmem_wrEnable_3,io_dmem_wrEnable_2,io_dmem_wrEnable_1,io_dmem_wrEnable_0}; // @[PipeConInterconnect.scala 46:41]
+  wire [3:0] selected_wrMask = selected_wr ? _selected_wrMask_T : 4'h0; // @[PipeConInterconnect.scala 28:19 41:41 46:21]
+  wire [31:0] _GEN_10 = io_dmem_wrAddress >= 32'h10 & io_dmem_wrAddress <= 32'h1f ? io_device_1_rdData : _GEN_3; // @[PipeConInterconnect.scala 35:74 36:16]
+  wire [31:0] _GEN_17 = io_dmem_wrAddress >= 32'h20 & io_dmem_wrAddress <= 32'h2f ? io_device_2_rdData : _GEN_10; // @[PipeConInterconnect.scala 35:74 36:16]
+  assign io_device_0_rd = io_dmem_wrAddress <= 32'hf & selected_rd; // @[PipeConInterconnect.scala 35:74 36:16 12:21]
+  assign io_device_0_wrData = io_dmem_wrAddress <= 32'hf ? selected_wrData : 32'h0; // @[PipeConInterconnect.scala 35:74 36:16 15:25]
+  assign io_device_0_wrMask = io_dmem_wrAddress <= 32'hf ? selected_wrMask : 4'h0; // @[PipeConInterconnect.scala 35:74 36:16 16:25]
+  assign io_device_1_rd = io_dmem_wrAddress >= 32'h10 & io_dmem_wrAddress <= 32'h1f & selected_rd; // @[PipeConInterconnect.scala 35:74 36:16 12:21]
+  assign io_device_1_wrData = io_dmem_wrAddress >= 32'h10 & io_dmem_wrAddress <= 32'h1f ? selected_wrData : 32'h0; // @[PipeConInterconnect.scala 35:74 36:16 15:25]
+  assign io_device_1_wrMask = io_dmem_wrAddress >= 32'h10 & io_dmem_wrAddress <= 32'h1f ? selected_wrMask : 4'h0; // @[PipeConInterconnect.scala 35:74 36:16 16:25]
+  assign io_device_2_address = io_dmem_wrAddress >= 32'h20 & io_dmem_wrAddress <= 32'h2f ? selected_address : 32'h0; // @[PipeConInterconnect.scala 35:74 36:16 14:26]
+  assign io_device_2_rd = io_dmem_wrAddress >= 32'h20 & io_dmem_wrAddress <= 32'h2f & selected_rd; // @[PipeConInterconnect.scala 35:74 36:16 12:21]
+  assign io_device_2_wr = io_dmem_wrAddress >= 32'h20 & io_dmem_wrAddress <= 32'h2f & selected_wr; // @[PipeConInterconnect.scala 35:74 36:16 13:21]
+  assign io_device_2_wrData = io_dmem_wrAddress >= 32'h20 & io_dmem_wrAddress <= 32'h2f ? selected_wrData : 32'h0; // @[PipeConInterconnect.scala 35:74 36:16 15:25]
+  assign io_device_3_address = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff ? selected_address
+     : 32'h0; // @[PipeConInterconnect.scala 35:74 36:16 14:26]
+  assign io_device_3_rd = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff & selected_rd; // @[PipeConInterconnect.scala 35:74 36:16 12:21]
+  assign io_device_3_wr = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff & selected_wr; // @[PipeConInterconnect.scala 35:74 36:16 13:21]
+  assign io_device_3_wrData = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff ? selected_wrData : 32'h0
+    ; // @[PipeConInterconnect.scala 35:74 36:16 15:25]
+  assign io_device_3_wrMask = io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff ? selected_wrMask : 4'h0
+    ; // @[PipeConInterconnect.scala 35:74 36:16 16:25]
+  assign io_dmem_rdData = rdDataReg; // @[PipeConInterconnect.scala 55:18]
+  always @(posedge clock) begin
+    if (reset) begin // @[PipeConInterconnect.scala 19:26]
+      rdDataReg <= 32'h0; // @[PipeConInterconnect.scala 19:26]
+    end else if (!(selected_wr)) begin // @[PipeConInterconnect.scala 41:41]
+      if (io_dmem_rdEnable) begin // @[PipeConInterconnect.scala 47:32]
+        if (io_dmem_wrAddress >= 32'h10000000 & io_dmem_wrAddress <= 32'h1fffffff) begin // @[PipeConInterconnect.scala 35:74]
+          rdDataReg <= io_device_3_rdData; // @[PipeConInterconnect.scala 36:16]
+        end else begin
+          rdDataReg <= _GEN_17;
+        end
+      end
+    end
+  end
+// Register and memory initialization
+`ifdef RANDOMIZE_GARBAGE_ASSIGN
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_INVALID_ASSIGN
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_REG_INIT
+`define RANDOMIZE
+`endif
+`ifdef RANDOMIZE_MEM_INIT
+`define RANDOMIZE
+`endif
+`ifndef RANDOM
+`define RANDOM $random
+`endif
+`ifdef RANDOMIZE_MEM_INIT
+  integer initvar;
+`endif
+`ifndef SYNTHESIS
+`ifdef FIRRTL_BEFORE_INITIAL
+`FIRRTL_BEFORE_INITIAL
+`endif
+initial begin
+  `ifdef RANDOMIZE
+    `ifdef INIT_RANDOM
+      `INIT_RANDOM
+    `endif
+    `ifndef VERILATOR
+      `ifdef RANDOMIZE_DELAY
+        #`RANDOMIZE_DELAY begin end
+      `else
+        #0.002 begin end
+      `endif
+    `endif
+`ifdef RANDOMIZE_REG_INIT
+  _RAND_0 = {1{`RANDOM}};
+  rdDataReg = _RAND_0[31:0];
+`endif // RANDOMIZE_REG_INIT
+  `endif // RANDOMIZE
+end // initial
+`ifdef FIRRTL_AFTER_INITIAL
+`FIRRTL_AFTER_INITIAL
+`endif
+`endif // SYNTHESIS
 endmodule
 module Csr(
   input  [11:0] io_address,
@@ -2568,61 +2659,9 @@ module NativeMemory2Pipecon(
   assign io_pipe_ack = ackreg; // @[NativeMemory2Pipecon.scala 23:15]
   assign io_native_address = io_pipe_address[8:0]; // @[NativeMemory2Pipecon.scala 26:39]
   assign io_native_wdata = io_pipe_wrData; // @[NativeMemory2Pipecon.scala 28:19]
-  assign io_native_cs = io_pipe_rd | io_pipe_wr; // @[NativeMemory2Pipecon.scala 14:27]
+  assign io_native_cs = ~enable; // @[NativeMemory2Pipecon.scala 17:19]
   assign io_native_wmask = io_pipe_wrMask; // @[NativeMemory2Pipecon.scala 18:19]
-  assign io_native_wen = io_pipe_wr; // @[NativeMemory2Pipecon.scala 19:17]
-  always @(posedge clock) begin
-    if (reset) begin // @[NativeMemory2Pipecon.scala 13:23]
-      ackreg <= 1'h0; // @[NativeMemory2Pipecon.scala 13:23]
-    end else begin
-      ackreg <= enable; // @[NativeMemory2Pipecon.scala 22:10]
-    end
-  end
-// Register and memory initialization
-`ifdef RANDOMIZE_GARBAGE_ASSIGN
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_INVALID_ASSIGN
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_REG_INIT
-`define RANDOMIZE
-`endif
-`ifdef RANDOMIZE_MEM_INIT
-`define RANDOMIZE
-`endif
-`ifndef RANDOM
-`define RANDOM $random
-`endif
-`ifdef RANDOMIZE_MEM_INIT
-  integer initvar;
-`endif
-`ifndef SYNTHESIS
-`ifdef FIRRTL_BEFORE_INITIAL
-`FIRRTL_BEFORE_INITIAL
-`endif
-initial begin
-  `ifdef RANDOMIZE
-    `ifdef INIT_RANDOM
-      `INIT_RANDOM
-    `endif
-    `ifndef VERILATOR
-      `ifdef RANDOMIZE_DELAY
-        #`RANDOMIZE_DELAY begin end
-      `else
-        #0.002 begin end
-      `endif
-    `endif
-`ifdef RANDOMIZE_REG_INIT
-  _RAND_0 = {1{`RANDOM}};
-  ackreg = _RAND_0[0:0];
-`endif // RANDOMIZE_REG_INIT
-  `endif // RANDOMIZE
-end // initial
-`ifdef FIRRTL_AFTER_INITIAL
-`FIRRTL_AFTER_INITIAL
-`endif
-`endif // SYNTHESIS
+  assign io_native_wen = ~io_pipe_wr; // @[NativeMemory2Pipecon.scala 19:20]
 endmodule
 module TopLevel(
   input         clock,
@@ -2885,18 +2924,21 @@ module CaravelTopLevel(
   input  [31:0]  io_mem_rdata,
   output         io_mem_cs,
   output [3:0]   io_mem_wmask,
-  output         io_mem_wen
+  output         io_mem_wen,
+  output [8:0]   io_mem2_address,
+  input  [31:0]  io_mem2_rdata,
+  output         io_mem2_cs
 );
-  wire  topLevel_clock; // @[CaravelTopLevel.scala 144:26]
-  wire  topLevel_reset; // @[CaravelTopLevel.scala 144:26]
-  wire [8:0] topLevel_io_mem_address; // @[CaravelTopLevel.scala 144:26]
-  wire [31:0] topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 144:26]
-  wire [31:0] topLevel_io_mem_rdata; // @[CaravelTopLevel.scala 144:26]
-  wire  topLevel_io_mem_cs; // @[CaravelTopLevel.scala 144:26]
-  wire [3:0] topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 144:26]
-  wire  topLevel_io_mem_wen; // @[CaravelTopLevel.scala 144:26]
-  wire  _io_caravel_la_data_out_T = ~io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 157:31]
-  TopLevel topLevel ( // @[CaravelTopLevel.scala 144:26]
+  wire  topLevel_clock; // @[CaravelTopLevel.scala 152:26]
+  wire  topLevel_reset; // @[CaravelTopLevel.scala 152:26]
+  wire [8:0] topLevel_io_mem_address; // @[CaravelTopLevel.scala 152:26]
+  wire [31:0] topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 152:26]
+  wire [31:0] topLevel_io_mem_rdata; // @[CaravelTopLevel.scala 152:26]
+  wire  topLevel_io_mem_cs; // @[CaravelTopLevel.scala 152:26]
+  wire [3:0] topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 152:26]
+  wire  topLevel_io_mem_wen; // @[CaravelTopLevel.scala 152:26]
+  wire  _io_caravel_la_data_out_T = ~io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 165:31]
+  TopLevel topLevel ( // @[CaravelTopLevel.scala 152:26]
     .clock(topLevel_clock),
     .reset(topLevel_reset),
     .io_mem_address(topLevel_io_mem_address),
@@ -2906,18 +2948,20 @@ module CaravelTopLevel(
     .io_mem_wmask(topLevel_io_mem_wmask),
     .io_mem_wen(topLevel_io_mem_wen)
   );
-  assign io_caravel_wbs_ack_o = 1'h0; // @[CaravelTopLevel.scala 136:24]
-  assign io_caravel_wbs_dat_o = 32'h0; // @[CaravelTopLevel.scala 137:24]
-  assign io_caravel_la_data_out = {{127'd0}, _io_caravel_la_data_out_T}; // @[CaravelTopLevel.scala 157:28]
+  assign io_caravel_wbs_ack_o = 1'h0; // @[CaravelTopLevel.scala 141:24]
+  assign io_caravel_wbs_dat_o = 32'h0; // @[CaravelTopLevel.scala 142:24]
+  assign io_caravel_la_data_out = {{127'd0}, _io_caravel_la_data_out_T}; // @[CaravelTopLevel.scala 165:28]
   assign io_caravel_io_out = 38'h0; // @[Cat.scala 33:92]
   assign io_caravel_io_oeb = 38'h0; // @[Cat.scala 33:92]
   assign io_caravel_user_irq = 3'h0;
-  assign io_mem_address = topLevel_io_mem_address; // @[CaravelTopLevel.scala 147:21]
-  assign io_mem_wdata = topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 147:21]
-  assign io_mem_cs = topLevel_io_mem_cs; // @[CaravelTopLevel.scala 147:21]
-  assign io_mem_wmask = topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 147:21]
-  assign io_mem_wen = topLevel_io_mem_wen; // @[CaravelTopLevel.scala 147:21]
-  assign topLevel_clock = io_caravel_wb_clk_i; // @[CaravelTopLevel.scala 113:25 119:7]
-  assign topLevel_reset = io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 114:25 125:7]
-  assign topLevel_io_mem_rdata = io_mem_rdata; // @[CaravelTopLevel.scala 147:21]
+  assign io_mem_address = topLevel_io_mem_address; // @[CaravelTopLevel.scala 155:21]
+  assign io_mem_wdata = topLevel_io_mem_wdata; // @[CaravelTopLevel.scala 155:21]
+  assign io_mem_cs = topLevel_io_mem_cs; // @[CaravelTopLevel.scala 155:21]
+  assign io_mem_wmask = topLevel_io_mem_wmask; // @[CaravelTopLevel.scala 155:21]
+  assign io_mem_wen = topLevel_io_mem_wen; // @[CaravelTopLevel.scala 155:21]
+  assign io_mem2_address = 9'h0; // @[CaravelTopLevel.scala 147:19]
+  assign io_mem2_cs = 1'h1; // @[CaravelTopLevel.scala 148:14]
+  assign topLevel_clock = io_caravel_wb_clk_i; // @[CaravelTopLevel.scala 118:25 124:7]
+  assign topLevel_reset = io_caravel_wb_rst_i; // @[CaravelTopLevel.scala 119:25 130:7]
+  assign topLevel_io_mem_rdata = io_mem_rdata; // @[CaravelTopLevel.scala 155:21]
 endmodule

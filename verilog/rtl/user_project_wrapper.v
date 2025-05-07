@@ -88,7 +88,10 @@ wire [3:0] wmask0;
 wire [9:0] addr0;
 wire [31:0] din0;
 wire [31:0] dout0;
-wire [31:0] unused_dout1;
+
+wire csb1;
+wire [9:0] addr1;
+wire [31:0] dout1;
 
 sky130_sram_2kbyte_1rw1r_32x512_8 OpenRAM_inst1 (
 `ifdef USE_POWER_PINS
@@ -135,7 +138,11 @@ CaravelTopLevel mprj (
     .io_mem_rdata(dout0),
     .io_mem_cs(csb0),
     .io_mem_wmask(wmask0),
-    .io_mem_wen(web0)
+    .io_mem_wen(web0),
+
+    .io_mem2_address(addr1),
+    .io_mem2_rdata(dout1),
+    .io_mem2_cs(csb1)
 );
 
 endmodule	// user_project_wrapper
