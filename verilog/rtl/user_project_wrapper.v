@@ -85,12 +85,12 @@ module user_project_wrapper #(
 wire csb0;
 wire web0;
 wire [3:0] wmask0;
-wire [9:0] addr0;
+wire [8:0] addr0;
 wire [31:0] din0;
 wire [31:0] dout0;
 
 wire csb1;
-wire [9:0] addr1;
+wire [8:0] addr1;
 wire [31:0] dout1;
 
 sky130_sram_2kbyte_1rw1r_32x512_8 OpenRAM_inst1 (
