@@ -107,10 +107,10 @@ sky130_sram_2kbyte_1rw1r_32x512_8 OpenRAM_inst1 (
     .dout0,
 
     // Disable second port
-    .clk1(0),
-    .csb1(1), // Active low
-    .addr1(0),
-    .dout1(unused_dout1)
+    .clk1(wb_clk_i),
+    .csb1(csb1), // Active low
+    .addr1(addr1),
+    .dout1(dout1)
 );
 
 CaravelTopLevel mprj (
