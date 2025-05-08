@@ -1,2 +1,5 @@
 */runs
 default.cvcrc
+
+# Ignore memory macro files retrieved at hardening
+sky130_sram*
